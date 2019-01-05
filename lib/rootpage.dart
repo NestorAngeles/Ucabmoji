@@ -1,5 +1,5 @@
-import 'package:app_profilepage/auth.dart';
-import 'package:app_profilepage/homepage.dart';
+import 'package:flutter_ucabmoji/auth.dart';
+import 'package:flutter_ucabmoji/homepage.dart';
 import 'package:flutter/material.dart';
 import 'loginpage.dart';
 

@@ -1,4 +1,4 @@
-import 'package:app_profilepage/selectprofpic.dart';
+import 'package:flutter_ucabmoji/selectprofpic.dart';
 import 'package:flutter/material.dart';
 
 //services
@@ -163,7 +163,7 @@ class _SignupPageState extends State<SignupPage> {
                                   var userUpdateInfo = new UserUpdateInfo();
                                   userUpdateInfo.displayName = _nickName;
                                   userUpdateInfo.photoUrl =
-                                      'https://pixel.nymag.com/imgs/daily/vulture/2017/06/14/14-tom-cruise.w700.h700.jpg';
+                                      'https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=726d4d91-7c5b-41a4-a728-9456f418549e';
                                   FirebaseAuth.instance
                                       .updateProfile(userUpdateInfo)
                                       .then((user) {

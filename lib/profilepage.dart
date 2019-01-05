@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'package:app_profilepage/services/usermanagement.dart';
+import 'package:flutter_ucabmoji/services/usermanagement.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -86,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Edit Nick Name', style: TextStyle(fontSize: 15.0)),
+            title: Text('Cambiar Nick Name', style: TextStyle(fontSize: 15.0)),
             content: Container(
               height: 100.0,
               width: 100.0,
@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: <Widget>[
                   TextField(
                     decoration: InputDecoration(
-                        labelText: 'New Name',
+                        labelText: 'Nuevo Nick Name',
                         labelStyle: TextStyle(
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.bold)),
@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text('Update'),
+                child: Text('Cambiar'),
                 textColor: Colors.blue,
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 150.0,
                     height: 150.0,
                     decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: Theme.of(context).primaryColor,
                         image: DecorationImage(
                             image: NetworkImage(profilePicUrl),
                             fit: BoxFit.cover),
@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: <Widget>[
                     Container(
                         height: 30.0,
-                        width: 95.0,
+                        width: 110.0,
                         child: Material(
                           borderRadius: BorderRadius.circular(20.0),
                           shadowColor: Colors.greenAccent,
@@ -199,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                             child: Center(
                               child: Text(
-                                'Edit Name',
+                                'Editar Nombre',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Montserrat'),
@@ -209,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         )),
                     Container(
                         height: 30.0,
-                        width: 95.0,
+                        width: 110.0,
                         child: Material(
                           borderRadius: BorderRadius.circular(20.0),
                           shadowColor: Colors.blueAccent,
@@ -219,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             onTap: selectPhoto,
                             child: Center(
                               child: Text(
-                                'Edit Photo',
+                                'Cambiar Foto',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Montserrat'),
@@ -229,7 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         )),
                     Container(
                         height: 30.0,
-                        width: 95.0,
+                        width: 110.0,
                         child: Material(
                           borderRadius: BorderRadius.circular(20.0),
                           shadowColor: Colors.redAccent,
@@ -247,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                             child: Center(
                               child: Text(
-                                'Log out',
+                                'Cerrar Sesion',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Montserrat'),

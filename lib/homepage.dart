@@ -1,7 +1,8 @@
-import 'package:app_profilepage/auth.dart';
+import 'package:flutter_ucabmoji/auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_ucabmoji/emojizarpage.dart';
 
 import 'profilepage.dart';
 import 'dashboard.dart';
@@ -52,7 +53,7 @@ class _HomePageState extends State<HomePage>
         children: <Widget>[
           new DashboardPage(),
           new ChatPage(),
-          new ChatPage(),
+          new Emojizar(),
           new GroupsPage(),
           new ProfilePage(onSignedOut: onSignedOut)
         ],

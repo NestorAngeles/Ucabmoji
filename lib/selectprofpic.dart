@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:app_profilepage/homepage.dart';
+import 'package:flutter_ucabmoji/homepage.dart';
 
 import 'services/usermanagement.dart';
 

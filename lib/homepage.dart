@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter_ucabmoji/auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_ucabmoji/emojizarpage.dart';
+import 'package:flutter_ucabmoji/location.dart';
+import 'package:flutter_ucabmoji/showdatapage.dart';
+import 'package:location/location.dart';
 
 import 'profilepage.dart';
 import 'dashboard.dart';
@@ -26,38 +31,61 @@ class _HomePageState extends State<HomePage>
 
   TabController tabController;
 
-  @override
-  void initState() {
+  Map<String,double> currentLocation = new Map();
+  StreamSubscription<Map<String,double>> locationSubscription;
+
+  Location location = new Location();
+  String error;
+
+  void initState(){
     super.initState();
     tabController = new TabController(length: 5, vsync: this);
+    currentLocation['Latitude'] = 0.0;
+    currentLocation['Longitude'] = 0.0;
+
+    locationSubscription = location.onLocationChanged().listen((Map<String,double> result) {
+      setState(() {
+        currentLocation = result;
+      });
+    });
+    print('Lat/Long:${currentLocation['latitude']}/${currentLocation['longitude']}');
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: new AppBar(
+        centerTitle: true,
+        title: Text("Ucabmoji",style: TextStyle(color: Colors.white)),
+        automaticallyImplyLeading: false,
+      ),
       bottomNavigationBar: new Material(
-        color: Theme.of(context).primaryColor,
+        color: Colors.white,
+        //color: Theme.of(context).primaryColor,
         child: TabBar(
           controller: tabController,
           tabs: <Widget>[
-            new Tab(icon: Icon(Icons.home)),
-            new Tab(icon: Icon(Icons.chat)),
-            new Tab(icon: Icon(Icons.camera)),
-            new Tab(icon: Icon(Icons.my_location)),
-            new Tab(icon: Icon(Icons.person)),
+            new Tab(icon: Icon(Icons.home,color: Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.chat,color: Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.camera,color: Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.my_location,color: Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.person,color: Theme.of(context).primaryColor)),
           ],
         ),
       ),
       body: new TabBarView(
         controller: tabController,
         children: <Widget>[
-          new DashboardPage(),
+          new ShowDataPage(),
           new ChatPage(),
-          new Emojizar(),
-          new GroupsPage(),
+          new Emojizar(latitud: currentLocation['latitude'].roundToDouble()),
+          new MyLocation(),
           new ProfilePage(onSignedOut: onSignedOut)
         ],
       ),
         );
   }
+
+
+
 }

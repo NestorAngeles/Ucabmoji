@@ -16,6 +16,7 @@ class _EmojizarState extends State<Emojizar> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
         body:  Container(
             child: Center(
                 child: new Column(

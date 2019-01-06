@@ -31,24 +31,24 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
           child: Column(
               children: <Widget>[
                 Image.file(widget.image, width: 50,height: 50),
-                new TextFormField(
+                new TextField(
                   decoration: new InputDecoration(
                       labelStyle: TextStyle(color: Color(dkPurple)),
                       labelText: "Titulo",
                       fillColor: Colors.white,
                       filled: true),
-                  validator: (value) => value.isEmpty ? "Texto vacio" : null,
-                  onSaved: (value) => titulo = value,
+                  //validator: (value) => value.isEmpty ? "Texto vacio" : null,
+                  onChanged: (value) => titulo = value,
                 ),
 
-                new TextFormField(
+                new TextField(
                     decoration: new InputDecoration(
                         labelStyle: TextStyle(color: Color(dkPurple)),
                         labelText: "Comentario",
                         fillColor: Colors.white,
                         filled: true),
-                    validator: (value) => value.isEmpty ? "Texto vacio" : null,
-                    onSaved: (value) => comentario = value),
+                    //validator: (value) => value.isEmpty ? "Texto vacio" : null,
+                    onChanged: (value) => comentario = value),
                 new SizedBox(height: 15),
                 new Text("Ubicacion",style: new TextStyle(fontSize: 30)),
                 new Container(
@@ -68,7 +68,7 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
                 new InkWell(
                     onTap: () {
                       Navigator.push(context,
-                          new MaterialPageRoute(builder: (context) => new PublicarPost()));
+                          new MaterialPageRoute(builder: (context) => new PublicarPost(titulo: titulo,comentario: comentario,)));
                     },
                     child: new Container(
                         width: 200.0,

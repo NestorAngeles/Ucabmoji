@@ -37,6 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     FirebaseAuth.instance.currentUser().then((user) {
       setState(() {
+        print("entrando");
         profilePicUrl = user.photoUrl;
         nickName = user.displayName;
       });
@@ -143,12 +144,13 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
         body: new Stack(
       children: <Widget>[
         Positioned(
             width: 350.0,
             left: 4.0,
-            top: MediaQuery.of(context).size.height / 5,
+            top: MediaQuery.of(context).size.height / 9,
             child: Column(
               children: <Widget>[
                 Container(
@@ -169,14 +171,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 Text(
                   nickName,
                   style: TextStyle(
+                    color: Colors.white,
                       fontSize: 30.0,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Montserrat'),
                 ),
                 SizedBox(height: 15.0),
                 Text(
-                  'Actor',
+                  'Estudiante',
                   style: TextStyle(
+                    color: Colors.white,
                       fontSize: 17.0,
                       fontStyle: FontStyle.italic,
                       fontFamily: 'Montserrat'),

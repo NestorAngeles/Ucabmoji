@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_ucabmoji/auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_ucabmoji/emojizarpage.dart';
 import 'package:flutter_ucabmoji/location.dart';
@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage>
     currentLocation['Latitude'] = 0.0;
     currentLocation['Longitude'] = 0.0;
 
+    initPlatformState();
     locationSubscription = location.onLocationChanged().listen((Map<String,double> result) {
       setState(() {
         currentLocation = result;
@@ -51,6 +52,24 @@ class _HomePageState extends State<HomePage>
     print('Lat/Long:${currentLocation['latitude']}/${currentLocation['longitude']}');
   }
 
+  void initPlatformState() async{
+    Map<String,double> my_location;
+    try{
+      my_location = await location.getLocation();
+      error="";
+    }on PlatformException catch(e){
+      if(e.code == 'PERMISSION_DENIED')
+        error = "Permission Denied";
+      else if(e.code == 'PERMISSION_DENIED_NEVER_ASK')
+        error = "Permission Denied - Please ask the user to eneable it from the app settings";
+      my_location = null;
+    }
+    setState(() {
+      currentLocation = my_location;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -58,6 +77,15 @@ class _HomePageState extends State<HomePage>
         centerTitle: true,
         title: Text("Ucabmoji",style: TextStyle(color: Colors.white)),
         automaticallyImplyLeading: false,
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Hola"),
+            onPressed: () {
+              print(
+                  'Lat/Long:${currentLocation['latitude']}/${currentLocation['longitude']}');
+            }
+          )
+        ],
       ),
       bottomNavigationBar: new Material(
         color: Colors.white,
@@ -78,7 +106,7 @@ class _HomePageState extends State<HomePage>
         children: <Widget>[
           new ShowDataPage(),
           new ChatPage(),
-          new Emojizar(latitud: currentLocation['latitude'].roundToDouble()),
+          new Emojizar(),
           new MyLocation(),
           new ProfilePage(onSignedOut: onSignedOut)
         ],

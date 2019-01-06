@@ -43,7 +43,7 @@ class PublicarPost extends StatelessWidget {
         ),
         body: Column(children: <Widget>[
             SizedBox(height: 100),
-            Post(titulo: titulo,comentario: comentario),
+            Post(titulo: titulo,comentario: comentario,image: image),
             SizedBox(height: 100),
             InkWell(
             onTap: () {

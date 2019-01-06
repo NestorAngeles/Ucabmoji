@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class Post extends StatelessWidget {
 
-  Post({this.titulo, this.comentario});
+  Post({this.titulo, this.comentario,this.image});
 
   String titulo, comentario;
 
@@ -26,7 +26,8 @@ class Post extends StatelessWidget {
             new Center(
               child: new Text(titulo,style: TextStyle(color: Colors.black),),),),
             new Center(
-              child: new Image.network("https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=726d4d91-7c5b-41a4-a728-9456f418549e", scale: 5)),
+              child: Image.file(image,scale: 5,),),
+              //child: new Image.network("https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=726d4d91-7c5b-41a4-a728-9456f418549e", scale: 5)),
             new Center(
               child: new Text(comentario,style: TextStyle(color: Colors.white)),)
 

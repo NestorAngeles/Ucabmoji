@@ -68,7 +68,7 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
                 new InkWell(
                     onTap: () {
                       Navigator.push(context,
-                          new MaterialPageRoute(builder: (context) => new PublicarPost(titulo: titulo,comentario: comentario,)));
+                          new MaterialPageRoute(builder: (context) => new PublicarPost(titulo: titulo,comentario: comentario,image: widget.image,)));
                     },
                     child: new Container(
                         width: 200.0,

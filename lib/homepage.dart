@@ -73,20 +73,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        centerTitle: true,
-        title: Text("Ucabmoji",style: TextStyle(color: Colors.white)),
-        automaticallyImplyLeading: false,
-        actions: <Widget>[
-          FlatButton(
-            child: Text("Hola"),
-            onPressed: () {
-              print(
-                  'Lat/Long:${currentLocation['latitude']}/${currentLocation['longitude']}');
-            }
-          )
-        ],
-      ),
+
       bottomNavigationBar: new Material(
         color: Colors.white,
         //color: Theme.of(context).primaryColor,
@@ -106,14 +93,12 @@ class _HomePageState extends State<HomePage>
         children: <Widget>[
           new ShowDataPage(),
           new ChatPage(),
-          new Emojizar(),
+          new Emojizar(onSignedOut: widget.onSignedOut,),
           new MyLocation(),
-          new ProfilePage(onSignedOut: onSignedOut)
+          new ProfilePage(onSignedOut: widget.onSignedOut)
         ],
       ),
         );
   }
-
-
 
 }

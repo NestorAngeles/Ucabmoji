@@ -6,7 +6,8 @@ import 'package:flutter_ucabmoji/homepage.dart';
 
 class CrearPublicacion extends StatefulWidget {
 
-  CrearPublicacion({this.image});
+  CrearPublicacion({this.onSignedOut,this.image});
+  final VoidCallback onSignedOut;
 
   File image;
 
@@ -17,74 +18,129 @@ class CrearPublicacion extends StatefulWidget {
 
 class _CrearPublicacionState extends State<CrearPublicacion> {
 
-  String titulo, comentario;
   int dkPurple = 0xFF2C1656;
   int lgPurple = 0xFF423261;
+
+  GlobalKey<FormState> _key = new GlobalKey();
+  bool _autovalidate = false;
+
+  String titulo, emoji, comentario, image;
+
+  bool nextPage(){
+    if (_key.currentState.validate()) {
+      _key.currentState.save();
+      return true;
+    }
+  }
+
+
+  List<DropdownMenuItem<String>> items = [
+    new DropdownMenuItem(
+      child: new Image.asset("design/smile.png"),
+      value: 'Student',
+    ),
+    new DropdownMenuItem(
+      child: new Image.asset("design/good.png"),
+      value: 'Professor',
+    ),
+    new DropdownMenuItem(
+      child: new Image.asset("design/sad.png"),
+      value: 'Hola',
+    ),
+    new DropdownMenuItem(
+      child: new Image.asset("design/angry.png"),
+      value: 'Perro',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(
-        title: Text("Emojizar"),backgroundColor: Color(dkPurple),),
-      body: Container(
-        child: Center(
-          child: Column(
-              children: <Widget>[
-                Image.file(widget.image, width: 50,height: 50),
-                new TextField(
-                  decoration: new InputDecoration(
-                      labelStyle: TextStyle(color: Color(dkPurple)),
-                      labelText: "Titulo",
-                      fillColor: Colors.white,
-                      filled: true),
-                  //validator: (value) => value.isEmpty ? "Texto vacio" : null,
-                  onChanged: (value) => titulo = value,
-                ),
-
-                new TextField(
-                    decoration: new InputDecoration(
-                        labelStyle: TextStyle(color: Color(dkPurple)),
-                        labelText: "Comentario",
-                        fillColor: Colors.white,
-                        filled: true),
-                    //validator: (value) => value.isEmpty ? "Texto vacio" : null,
-                    onChanged: (value) => comentario = value),
-                new SizedBox(height: 15),
-                new Text("Ubicacion",style: new TextStyle(fontSize: 30)),
-                new Container(
-                    padding: EdgeInsets.only(top:20,left: 50,right: 30),
-                    child:
-                    new Row(
-                        children: <Widget>[
-                          new Image.asset("design/angry.png",scale: 2,),
-                          new SizedBox(width: 10),
-                          new Image.asset("design/sad.png",scale: 2,),
-                          new SizedBox(width: 10),
-                          new Image.asset("design/good.png",scale: 2,),
-                          new SizedBox(width: 10),
-                          new Image.asset("design/smile.png",scale: 2,),
-                        ])),
-                new SizedBox(height: 15),
-                new InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          new MaterialPageRoute(builder: (context) => new PublicarPost(titulo: titulo,comentario: comentario,image: widget.image,)));
-                    },
-                    child: new Container(
-                        width: 200.0,
-                        height: 50.0,
-                        decoration: new BoxDecoration(
-                            color: Colors.green,
-                            border: new Border.all(color: Colors.white, width: 1.5),
-                            borderRadius: new BorderRadius.circular(10.0)),
-                        child: new Center(
-                            child: new Text('EMOJIZAR',
-                                style: new TextStyle(
-                                    fontSize: 24.0,
-                                    color: Colors.white)))))
-              ]),
+      appBar: new AppBar(
+        title: new Text(''),
+      ),
+      body: new SingleChildScrollView(
+        child: new Container(
+          padding: new EdgeInsets.all(15.0),
+          child: new Form(
+            key: _key,
+            autovalidate: _autovalidate,
+            child: FormUI(),
+          ),
         ),
       ),
+      floatingActionButton: new FloatingActionButton(
+          onPressed: (){
+            if(nextPage()){
+              Navigator.push(context,
+                  new MaterialPageRoute(builder: (context) => new PublicarPost(
+                    titulo: titulo,
+                    comentario:comentario,
+                    image:widget.image,
+                    onSignedOut: widget.onSignedOut,
+              )));
+            }
+          },
+          tooltip: "Add Image",
+          child: Icon(Icons.check)),
     );
   }
+
+  Widget FormUI() {
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Center(
+          child:
+        new Image.file(widget.image,scale: 3),),
+        new SizedBox(height: 20,),
+        new Row(
+          children: <Widget>[
+            new Flexible(
+              child: new TextFormField(
+                decoration: new InputDecoration(hintText: 'Titulo',hintStyle: TextStyle(color: Theme.of(context).primaryColor)),
+                validator: validateName,
+                onSaved: (val) {
+                  titulo = val;
+                },
+                maxLength: 32,
+              ),
+            ),
+            new SizedBox(width: 20.0),
+            new DropdownButtonHideUnderline(
+                child: new DropdownButton(
+                  items: items,
+                  hint: new Text("Emoji"),
+                  value: emoji,
+                  onChanged: (String val) {
+                    setState(() {
+                      emoji = val;
+                    });
+                  },
+                ))
+          ],
+        ),
+        new TextFormField(
+          decoration: new InputDecoration(hintText: 'Comentario',hintStyle: TextStyle(color: Theme.of(context).primaryColor)),
+          onSaved: (val) {
+            comentario = val;
+          },
+          validator: validateMessage,
+          maxLines: 5,
+          maxLength: 200,
+        ),
+
+      ],
+    );
+  }
+
+  String validateName(String val) {
+    return val.length == 0 ? "Debes escribir un titulo" : null;
+  }
+
+  String validateMessage(String val) {
+    return val.length == 0 ? "Debes escribir un comentario" : null;
+  }
+
+
 }

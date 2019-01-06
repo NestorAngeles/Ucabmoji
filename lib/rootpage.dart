@@ -47,7 +47,6 @@ class _RootPageState extends State<RootPage> {
     });
   }
 
-
   //PAGINA DE CONTROL PARA CUANDO NO SE A INICIADO LA SESION MOSTRAR EL LOGIN
   @override
   Widget build(BuildContext context) {

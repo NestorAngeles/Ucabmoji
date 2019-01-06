@@ -3,13 +3,16 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ucabmoji/auth.dart';
 import 'package:flutter_ucabmoji/homepage.dart';
+import 'package:flutter_ucabmoji/rootpage.dart';
 import 'package:flutter_ucabmoji/widgets/post.dart';
 
 class PublicarPost extends StatelessWidget {
 
-  PublicarPost({this.titulo,this.comentario,this.image});
+  PublicarPost({this.onSignedOut,this.titulo,this.comentario,this.image});
 
+  final VoidCallback onSignedOut;
   String titulo, comentario, nickName,profilePicUrl;
 
   File image;
@@ -49,7 +52,7 @@ class PublicarPost extends StatelessWidget {
             onTap: () {
               _sendToServer();
               Navigator.push(context,
-                  new MaterialPageRoute(builder: (context) => new HomePage()));
+                  new MaterialPageRoute(builder: (context) => new RootPage(auth: new Auth())));
             },
             child:
             Container(

@@ -6,6 +6,10 @@ import 'package:image_picker/image_picker.dart';
 
 
 class Camara extends StatefulWidget {
+
+  Camara({this.onSignedOut});
+  final VoidCallback onSignedOut;
+
   @override
   _CamaraState createState() => new _CamaraState();
 }
@@ -15,9 +19,15 @@ class _CamaraState extends State<Camara> {
   int dkPurple = 0xFF2C1656;
   int lgPurple = 0xFF423261;
 
+  String next="";
+
   int indexActual = 1;
 
   File _image;
+
+  Color siguiente = Colors.grey;
+
+  bool isImage=false;
 
   Widget callPage(int index){
     switch(index){
@@ -34,6 +44,11 @@ class _CamaraState extends State<Camara> {
       var image = await ImagePicker.pickImage(source: ImageSource.gallery,maxHeight: 720,maxWidth: 720);
       setState(() {
         _image = image;
+        if(_image!=null) {
+          siguiente = Colors.green;
+          isImage = true;
+          next = "Siguiente";
+        }
       });
     //}
 
@@ -66,6 +81,20 @@ class _CamaraState extends State<Camara> {
       appBar: new AppBar(
         title: new Text('Emojizar'),
         backgroundColor: Color(dkPurple),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(next,style: TextStyle(color: siguiente,fontSize: 20)),
+            onPressed: (){
+              if(isImage) {
+                Navigator.push(context,
+                    new MaterialPageRoute(
+                        builder: (context) => new CrearPublicacion(
+                          image: _image,
+                          onSignedOut: widget.onSignedOut,)));
+              }
+            },
+          )
+        ],
       ),
 
       //CUERPO DONDE SE UBICA LA IMAGEN CAPTURADA---------------------------
@@ -75,28 +104,13 @@ class _CamaraState extends State<Camara> {
             : new Image.file(_image),
       ),
 
-      //BARRA INFERIOR QUE CONTIENE LOS 3 BOTONES FUNCIONALES-------------------
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: new IconButton (icon: Image.asset("design/no_icon.png"), onPressed: deleteImage),
-              title: new Text("")),
-          BottomNavigationBarItem(
-              icon: new IconButton (icon: Image.asset("design/camera_icon.png",height: 100,width: 100), onPressed: (){getImage();}),
-              title: new Text("")),
-          BottomNavigationBarItem(
-              icon: new IconButton (icon: Image.asset("design/yes_icon.png"), onPressed: (){
-                Navigator.push(context,
-                  new MaterialPageRoute(builder: (context) => new CrearPublicacion(image: _image,)));
-                }),
-              title: new Text("")),
-        ],
+      floatingActionButton: FloatingActionButton(
+        child:Icon(Icons.photo_camera),
+        onPressed: () {
+          if(!isImage)
+          getImage();
+        }),
 
-        currentIndex: indexActual,
-        onTap: _onItemTapped,
-        fixedColor: Color(lgPurple),
-
-      ),
     );
   }
 

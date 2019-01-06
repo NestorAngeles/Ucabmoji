@@ -7,6 +7,9 @@ import 'package:flutter/services.dart';
 
 class Emojizar extends StatefulWidget {
 
+  Emojizar({this.onSignedOut});
+  final VoidCallback onSignedOut;
+
   @override
   _EmojizarState createState() => _EmojizarState();
 }
@@ -74,7 +77,7 @@ class _EmojizarState extends State<Emojizar> {
                             print(long);
                             print('Lat/Long:${currentLocation['latitude']}/${currentLocation['longitude']}');
                             Navigator.push(context,
-                                new MaterialPageRoute(builder: (context) => new Camara()));
+                                new MaterialPageRoute(builder: (context) => new Camara(onSignedOut: widget.onSignedOut,)));
                           },
                           child: new Container(
                               width: 200.0,

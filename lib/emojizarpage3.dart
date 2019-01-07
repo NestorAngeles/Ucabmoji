@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ucabmoji/emojizarpage4.dart';
 import 'package:flutter_ucabmoji/homepage.dart';
@@ -22,6 +23,8 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
 
   int dkPurple = 0xFF2C1656;
   int lgPurple = 0xFF423261;
+
+  String nickName, profilePicUrl;
 
   GlobalKey<FormState> _key = new GlobalKey();
   bool _autovalidate = false;
@@ -48,6 +51,17 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
       return false;
     }
   }
+
+  sendNick() async{
+    await FirebaseAuth.instance.currentUser().then((user) {
+      profilePicUrl = user.photoUrl;
+      nickName = user.displayName;
+    }).catchError((e) {
+      print(e);
+    });
+
+  }
+
 
   List<DropdownMenuItem<String>> items = [
     new DropdownMenuItem(
@@ -89,6 +103,7 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
             print(widget.long);
             print(widget.lat);
             if(nextPage()){
+              sendNick();
               Navigator.push(context,
                   new MaterialPageRoute(builder: (context) => new PublicarPost(
                     titulo: titulo,
@@ -98,6 +113,8 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
                     onSignedOut: widget.onSignedOut,
                     lat: widget.lat,
                     long: widget.long,
+                    nickName: nickName,
+                    profilePicUrl: profilePicUrl,
               )));
             }
           },

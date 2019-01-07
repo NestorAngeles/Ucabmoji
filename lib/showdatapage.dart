@@ -139,27 +139,111 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
   Widget UI(String titulo, String comentario, String nickName,String emoji) {
     return new Card(
-      elevation: 10.0,
-      child: new Container(
-        color: Colors.white,
-        padding: new EdgeInsets.all(20.0),
-        child: new Row(children: <Widget>[
-          new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        margin: EdgeInsets.all(15.0),
+        elevation:4,
+        child:
+        //Container(color: Theme.of(context).primaryColor,padding: EdgeInsets.all(20),child:
+        Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              new Text('Titulo : $titulo',style: TextStyle(color: Theme.of(context).primaryColor,fontSize: 20)),
-              //new Text('Profession : $profession',style: TextStyle(color: Colors.white)),
-              new Text('Comentario : $comentario',style: TextStyle(color: Theme.of(context).primaryColor)),
-              new Text('Usuario : $nickName',style: TextStyle(color: Theme.of(context).primaryColor)),
-            ],
-          ),
-          new SizedBox(width: 20,),
-          new Image.asset("design/${emoji}.png",scale: 2),
-          new SizedBox(width: 20,),
-          //new Image.asset("design/modulo_Aulas.jpg",scale: 9),
-        ],)
-      ),
-    );
+              Container(color: Theme.of(context).accentColor,
+                child:
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0,0, 5.0, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+
+                      //Row(
+                      //children: <Widget>[
+
+                      //new Container(
+                      //height: 40.0,
+                      //width: 40.0,
+                      //decoration: new BoxDecoration(
+                      //shape: BoxShape.circle,
+                      //image: new DecorationImage(
+                      //fit: BoxFit.fill,
+                      //image: new NetworkImage(
+                      //"https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=1e8892f2-9da7-46f6-836a-936a51d234ca")),
+                      //),
+                      //),
+
+
+                      new SizedBox(
+                        width: 10.0,
+                      ),
+                      new Text(
+                        titulo,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),
+                      ),
+                      //],
+                      //),
+                      new IconButton(
+                        icon: Icon(Icons.more_vert,color: Colors.white),
+                        onPressed: null,
+                      )
+                    ],
+                  ),
+                ),),
+
+
+              Divider(),
+              //Center(
+              //fit: FlexFit.loose,
+              //child:
+              //new Image.file(
+                //image,height: 120,width: 120,
+                //fit: BoxFit.cover,
+              //),
+              //),
+              Divider(),
+              Container(//color:Theme.of(context).accentColor,
+                child:Column(
+                  children:<Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text("Long:  / Lat: ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        comentario,
+                        style: TextStyle(),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16.0, 10.0, 0.0, 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Container(
+                            height: 40.0,
+                            width: 40.0,
+                            child: Image.asset("design/$emoji.png"),),
+                          new SizedBox(
+                            width: 10.0,
+                          ),
+                          Expanded(
+                            child: new Text(nickName,style: TextStyle(fontWeight: FontWeight.bold),),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(0,10,15,0),
+                              child:
+                              Text(DateTime.now().day.toString()+"/"+DateTime.now().month.toString()+"/"+DateTime.now().year.toString(),
+                                  style: TextStyle(color: Colors.grey))),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                //),
+
+              ),]));
   }
 
 }

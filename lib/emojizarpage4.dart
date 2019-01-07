@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -13,12 +12,14 @@ import 'package:random_string/random_string.dart' as random;
 
 class PublicarPost extends StatelessWidget {
 
-  PublicarPost({this.onSignedOut,this.titulo,this.comentario,this.image,this.emoji,this.lat,this.long});
+  PublicarPost({this.onSignedOut,this.titulo,this.comentario,this.image,this.emoji,this.lat,this.long,this.nickName,this.profilePicUrl});
 
   final VoidCallback onSignedOut;
   String titulo, comentario, nickName,profilePicUrl,foto,emoji;
   double lat,long;
   File image;
+
+
 
   _sendToServer() async {
 
@@ -80,9 +81,115 @@ class PublicarPost extends StatelessWidget {
           title: Text("Publicar"),
         ),
         body: Column(children: <Widget>[
-            SizedBox(height: 100),
-            Post(titulo: titulo,comentario: comentario,image: image),
-            SizedBox(height: 100),
+          Card(
+              margin: EdgeInsets.all(15.0),
+              elevation:4,
+              child:
+          //Container(color: Theme.of(context).primaryColor,padding: EdgeInsets.all(20),child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+          Container(color: Theme.of(context).primaryColor,
+            child:
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0,0, 5.0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+
+                    //Row(
+                      //children: <Widget>[
+
+                        //new Container(
+                          //height: 40.0,
+                          //width: 40.0,
+                          //decoration: new BoxDecoration(
+                            //shape: BoxShape.circle,
+                            //image: new DecorationImage(
+                                //fit: BoxFit.fill,
+                                //image: new NetworkImage(
+                                    //"https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=1e8892f2-9da7-46f6-836a-936a51d234ca")),
+                          //),
+                        //),
+
+
+                        new SizedBox(
+                          width: 10.0,
+                        ),
+                        new Text(
+                          titulo,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),
+                        ),
+                      //],
+                    //),
+                    new IconButton(
+                      icon: Icon(Icons.more_vert,color: Colors.white),
+                      onPressed: null,
+                    )
+                  ],
+                ),
+              ),),
+
+
+              Divider(),
+              //Center(
+                //fit: FlexFit.loose,
+                //child:
+                new Image.file(
+                image,height: 120,width: 120,
+                  //fit: BoxFit.cover,
+                ),
+              //),
+              Divider(),
+              Container(//color:Theme.of(context).accentColor,
+                child:Column(
+              children:<Widget>[
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text("Long: $long / Lat: $lat",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+              ),
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  comentario,
+                  style: TextStyle(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 10.0, 0.0, 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    new Container(
+                      height: 40.0,
+                      width: 40.0,
+                      child: Image.asset("design/$emoji.png"),),
+                    new SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      child: new Text(nickName,style: TextStyle(fontWeight: FontWeight.bold),),
+                      ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0,10,15,0),
+                  child:
+                  Text(DateTime.now().day.toString()+"/"+DateTime.now().month.toString()+"/"+DateTime.now().year.toString(),
+                      style: TextStyle(color: Colors.grey))),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          //),
+
+          ),])),
+
+
+            SizedBox(height: 25,),
             InkWell(
             onTap: () {
               _sendToServer();

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 
+
 class ProfilePage extends StatefulWidget {
 
   ProfilePage({this.onSignedOut});
@@ -157,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 150.0,
                     height: 150.0,
                     decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        color: Colors.white,
                         image: DecorationImage(
                             image: NetworkImage(profilePicUrl),
                             fit: BoxFit.cover),

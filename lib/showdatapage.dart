@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ucabmoji/ajustes.dart';
 import 'package:flutter_ucabmoji/myData.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_ucabmoji/widgets/appbar.dart';
@@ -35,10 +36,12 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       var data = snap.value;
       allData.clear();
       for (var key in keys) {
+        print(data[key]['emoji']);
         myData d = new myData(
           data[key]['titulo'],
           data[key]['comentario'],
           data[key]['nickName'],
+          data[key]['emoji'],
         );
         allData.add(d);
       }
@@ -48,6 +51,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             data[key]['titulo'],
             data[key]['comentario'],
             data[key]['nickName'],
+            data[key]['emoji'],
           );
           allData2.add(e);
         }
@@ -66,9 +70,11 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Ucabmoji Home"),
+        title: Text("Ucabmoji Home",style: TextStyle(fontSize: 25),),
         elevation: 5,
-        bottom: new TabBar(tabs:
+        bottom: new TabBar(
+          unselectedLabelColor: Colors.grey,
+          tabs:
             <Widget>[
               new Tab(
                 icon: new Icon(Icons.people),
@@ -79,15 +85,25 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             ],
         controller: controller,
         ),
-      ),
 
+          actions: <Widget>[
+      IconButton(
+      icon: Icon(Icons.settings),
+        onPressed: () {
+          Navigator.push(context,
+              new MaterialPageRoute(builder: (context) => new Ajustes()));
+        }
+      ),]),
 
       body: new TabBarView(
         controller: controller,
           children:<Widget>[
             new Container(
-                child: allData.length == 0
-                    ? new Text(' No Data is Available')
+                child: (allData.length == 0 || allData.length == null || allData == null)
+                    ? new Container(
+                      child: new Center(
+                        child: new Image.asset("design/sad.png"),)
+                      )
                     : new ListView.builder(
                   itemCount: allData.length,
                   itemBuilder: (_, index) {
@@ -95,12 +111,16 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                       allData[index].titulo,
                       allData[index].comentario,
                       allData[index].nickName,
+                      allData[index].emoji,
                     );
                   },
                 )),
             new Container(
-                child: allData.length == 0
-                    ? new Text(' No Data is Available')
+                child: (allData.length == 0 || allData.length == null || allData == null)
+                    ? new Container(
+                    child: new Center(
+                      child: new Image.asset("design/sad.png"),)
+                )
                     : new ListView.builder(
                   itemCount: allData2.length,
                   itemBuilder: (_, index) {
@@ -108,6 +128,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                       allData2[index].titulo,
                       allData2[index].comentario,
                       allData2[index].nickName,
+                      allData2[index].emoji,
                     );
                   },
                 )),
@@ -116,7 +137,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
   }
 
 
-  Widget UI(String titulo, String comentario, String nickName) {
+  Widget UI(String titulo, String comentario, String nickName,String emoji) {
     return new Card(
       elevation: 10.0,
       child: new Container(
@@ -133,11 +154,12 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             ],
           ),
           new SizedBox(width: 20,),
-          new Image.asset("design/ucabista.png",scale: 5),
+          new Image.asset("design/${emoji}.png",scale: 2),
           new SizedBox(width: 20,),
           //new Image.asset("design/modulo_Aulas.jpg",scale: 9),
         ],)
       ),
     );
   }
+
 }

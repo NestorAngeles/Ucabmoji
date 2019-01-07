@@ -87,6 +87,8 @@ PODS:
     - FirebaseCore (~> 5.1)
     - GTMSessionFetcher/Core (~> 1.1)
   - Flutter (1.0.0)
+  - fluttertoast (0.0.2):
+    - Flutter
   - GoogleAppMeasurement (5.3.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
     - GoogleUtilities/MethodSwizzler (~> 5.2)
@@ -160,6 +162,7 @@ DEPENDENCIES:
   - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - location (from `.symlinks/plugins/location/ios`)
 
@@ -200,6 +203,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   location:
@@ -222,6 +227,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: e2fa4cb35ef5558c200f7f0ad8a53e212215f93e
   FirebaseStorage: 3d22c041370593e639fba013d1eb698a8dae2881
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  fluttertoast: 0a20dcbbb8ecfd1a61b6285651ff2d5989d033fb
   GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
   GoogleUtilities: 95996bea7c7d9b8fb811b7507669a4a8762f80c7
   gRPC: 9d4c549f37c7cef22478634bac7a0405b6e3dbfb

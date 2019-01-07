@@ -3,6 +3,7 @@ import 'package:flutter_ucabmoji/signuppage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 20.0),
             Container(
               child: new Center(
-                child: new Image.asset("design/ucabista.png",scale: 3,),
+                child: new Image.asset("design/ucabista.png",scale: 3),
               )),
             Container(
                 padding: EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
@@ -89,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                         elevation: 7.0,
                         child: GestureDetector(
                           onTap: () {
+                            showToast("Iniciando Sesion", true);
                             FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: _email, password: _password)
@@ -96,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                               widget.onSignedIn();
                               //Navigator.of(context).pushReplacementNamed('/homepage');
                             }).catchError((e) {
+                              showToast(e.toString(), false);
                               print(e);
                             });
                           },
@@ -112,35 +115,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(height: 15.0),
-                    //Container(
-                    //  height: 40.0,
-                    //  color: Colors.transparent,
-                    //  child: Container(
-                    //    decoration: BoxDecoration(
-                    //        border: Border.all(
-                    //            color: Colors.black,
-                    //            style: BorderStyle.solid,
-                    //            width: 1.0),
-                    //        color: Colors.transparent,
-                    //        borderRadius: BorderRadius.circular(20.0)),
-                    //    child: Row(
-                    //      mainAxisAlignment: MainAxisAlignment.center,
-                    //      children: <Widget>[
-                            // Center(
-                            //   child:
-                            //       ImageIcon(AssetImage('assets/facebook.png')),
-                            // ),
-                            // SizedBox(width: 10.0),
-                            //Center(
-                            //  child: Text('Log in with facebook',
-                            //      style: TextStyle(
-                            //          fontWeight: FontWeight.bold,
-                            //          fontFamily: 'Montserrat')),
-                            //)
-                          //],
-                        //),
-                      //),
-                    //)
                   ],
                 )),
             SizedBox(height: 15.0),
@@ -172,4 +146,30 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ));
   }
+
+  void showToast (String alerta, bool color) {
+    String error;
+
+    if(alerta.contains("There is no user record corresponding to this identifier."))
+      alerta = "No existe alguna cuenta con esta direccion de correo";
+
+    if(alerta.contains("The password is invalid or the user does not have a password."))
+      alerta = "La contraseña es invalida";
+
+    Color colors;
+    if(!color)
+      colors = Colors.red;
+    else
+      colors = Colors.green;
+
+    Fluttertoast.showToast(
+        backgroundColor: colors,
+        msg: alerta,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        textColor: Colors.white
+    );
+  }
+
 }

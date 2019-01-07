@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ucabmoji/emojizarpage2.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Emojizar extends StatefulWidget {
 
@@ -16,6 +18,7 @@ class Emojizar extends StatefulWidget {
 
 class _EmojizarState extends State<Emojizar> {
 
+
   Map<String,double> currentLocation = new Map();
   StreamSubscription<Map<String,double>> locationSubscription;
 
@@ -23,6 +26,24 @@ class _EmojizarState extends State<Emojizar> {
   String error;
 
   double lat,long;
+
+  comprobarCorreo()async{
+    List<String> nicks = new List();
+
+    DatabaseReference ref = await FirebaseDatabase.instance.reference();
+    ref.child('Post').once().then((DataSnapshot snap) {
+      var keys = snap.value.keys;
+      var data = snap.value;
+      nicks.clear();
+      print("Hola");
+      for (var key in keys) {
+        String d = data['nickName'];
+        nicks.add(d);
+      }
+      print('Length: ${nicks.length}');
+    });
+
+  }
 
   void initState(){
     super.initState();
@@ -73,11 +94,12 @@ class _EmojizarState extends State<Emojizar> {
                       new Image.asset('design/ucabista.png', width: 230.0, height: 286.0,),
                       new InkWell(
                           onTap: () {
+                            comprobarCorreo();
                             print(lat);
                             print(long);
                             print('Lat/Long:${currentLocation['latitude']}/${currentLocation['longitude']}');
                             Navigator.push(context,
-                                new MaterialPageRoute(builder: (context) => new Camara(onSignedOut: widget.onSignedOut,)));
+                                new MaterialPageRoute(builder: (context) => new Camara(onSignedOut: widget.onSignedOut,lat: lat,long: long)));
                           },
                           child: new Container(
                               width: 200.0,

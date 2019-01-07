@@ -7,8 +7,9 @@ import 'package:image_picker/image_picker.dart';
 
 class Camara extends StatefulWidget {
 
-  Camara({this.onSignedOut});
+  Camara({this.onSignedOut,this.lat,this.long});
   final VoidCallback onSignedOut;
+  double lat,long;
 
   @override
   _CamaraState createState() => new _CamaraState();
@@ -90,7 +91,9 @@ class _CamaraState extends State<Camara> {
                     new MaterialPageRoute(
                         builder: (context) => new CrearPublicacion(
                           image: _image,
-                          onSignedOut: widget.onSignedOut,)));
+                          onSignedOut: widget.onSignedOut,
+                          lat: widget.lat,
+                          long: widget.long)));
               }
             },
           )

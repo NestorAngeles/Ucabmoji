@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class UserManagement {
+
   storeNewUser(user, context) {
     Firestore.instance.collection('/users').add({
       'email': user.email,

@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_ucabmoji/emojizarpage4.dart';
 import 'package:flutter_ucabmoji/homepage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CrearPublicacion extends StatefulWidget {
 
-  CrearPublicacion({this.onSignedOut,this.image});
+  CrearPublicacion({this.onSignedOut,this.image,this.lat,this.long});
   final VoidCallback onSignedOut;
+  double lat,long;
 
   File image;
 
@@ -29,27 +31,40 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
   bool nextPage(){
     if (_key.currentState.validate()) {
       _key.currentState.save();
-      return true;
+      if(isEmoji())
+        return true;
+      else
+        return false;
+    }else{
+      return false;
     }
   }
 
+  bool isEmoji(){
+    if(emoji!=null) {
+      return true;
+    }else {
+      showToast("Debes seleccionar un Emoji", false);
+      return false;
+    }
+  }
 
   List<DropdownMenuItem<String>> items = [
     new DropdownMenuItem(
       child: new Image.asset("design/smile.png"),
-      value: 'Student',
+      value: 'smile',
     ),
     new DropdownMenuItem(
       child: new Image.asset("design/good.png"),
-      value: 'Professor',
+      value: 'good',
     ),
     new DropdownMenuItem(
       child: new Image.asset("design/sad.png"),
-      value: 'Hola',
+      value: 'sad',
     ),
     new DropdownMenuItem(
       child: new Image.asset("design/angry.png"),
-      value: 'Perro',
+      value: 'angry',
     ),
   ];
 
@@ -71,13 +86,18 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
       ),
       floatingActionButton: new FloatingActionButton(
           onPressed: (){
+            print(widget.long);
+            print(widget.lat);
             if(nextPage()){
               Navigator.push(context,
                   new MaterialPageRoute(builder: (context) => new PublicarPost(
                     titulo: titulo,
                     comentario:comentario,
                     image:widget.image,
+                    emoji:emoji,
                     onSignedOut: widget.onSignedOut,
+                    lat: widget.lat,
+                    long: widget.long,
               )));
             }
           },
@@ -94,6 +114,7 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
           child:
         new Image.file(widget.image,scale: 3),),
         new SizedBox(height: 20,),
+        new Divider(indent: 1,height: 10,),
         new Row(
           children: <Widget>[
             new Flexible(
@@ -142,5 +163,23 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
     return val.length == 0 ? "Debes escribir un comentario" : null;
   }
 
+  void showToast (String alerta, bool color) {
+    String error;
+
+    Color colors;
+    if(!color)
+      colors = Colors.red;
+    else
+      colors = Colors.green;
+
+    Fluttertoast.showToast(
+        backgroundColor: colors,
+        msg: alerta,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        textColor: Colors.white
+    );
+  }
 
 }

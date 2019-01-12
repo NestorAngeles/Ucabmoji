@@ -35,6 +35,10 @@ class _PublicarPostState extends State<PublicarPost> {
 
   bool emojizar=false;
 
+  List<int> num = [];
+  int num2;
+
+
   void initState(){
     print("initSATETE");
 
@@ -46,9 +50,43 @@ class _PublicarPostState extends State<PublicarPost> {
         emojizar=true;
       });
     });
+    numeroPost();
+    //numeroPost2();
     //getUrl();
   }
 
+  numeroPost(){
+
+    DatabaseReference ref = FirebaseDatabase.instance.reference();
+    ref.child('NumPost').once().then((DataSnapshot snap) {
+      var keys = snap.value.keys;
+      var data = snap.value;
+      num.clear();
+
+      for (var key in keys) {
+        //print(data[key]['num']);
+        int d = data[key]['num'];
+        num.add(d);
+      }
+      num.sort();
+      setState(() {
+        num2= num.last+1;
+        print(num2);
+        print('Length : ${num.length}');
+        numeroPost2();
+      });
+    });
+  }
+
+  numeroPost2() {
+
+    DatabaseReference ref2 = FirebaseDatabase.instance.reference();
+    var data = {
+      "num": num2,
+    };
+    ref2.child('NumPost').push().set(data);
+
+  }
 
   getUrl() async{
     final StorageReference storageRef = FirebaseStorage.instance.ref().child('PostFotos').child(widget.foto);
@@ -61,6 +99,7 @@ class _PublicarPostState extends State<PublicarPost> {
   }
 
   _sendToServer() async {
+
 
     await FirebaseAuth.instance.currentUser().then((user) {
         widget.profilePicUrl = user.photoUrl;
@@ -98,7 +137,7 @@ class _PublicarPostState extends State<PublicarPost> {
       var data = {
         "titulo": widget.titulo,
         "comentario": widget.comentario,
-        "ubicacion": 0,
+        //"ubicacion": 0,
         "emoji": widget.emoji,
 
         "nickName": widget.nickName,
@@ -116,6 +155,7 @@ class _PublicarPostState extends State<PublicarPost> {
         "minutos" : DateTime.now().minute,
 
         "fotoUrl" :  url,
+        "num": num2,
        };
       ref.child('Post').push().set(data).then((Value){
         print("posted");
@@ -256,6 +296,7 @@ class _PublicarPostState extends State<PublicarPost> {
               if(emojizar) {
                 //publicarFoto();
                 //tiempo();
+
                 _sendToServer();
                 Navigator.push(context,
                     new MaterialPageRoute(

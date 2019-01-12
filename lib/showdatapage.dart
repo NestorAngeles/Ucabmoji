@@ -26,26 +26,6 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       print(e);
     });}
 
-
-    getUrl(String fotoId) async {
-    print("Comenzo");
-
-    final ref =  FirebaseStorage.instance.ref().child("PostFotos").child(fotoId);//.child(fotoId); //child("D1260Nes.png");
-    String url =  await ref.getDownloadURL(); //as String;
-    print(url);
-
-    //fotoUrl = "https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=1e8892f2-9da7-46f6-836a-936a51d234ca";
-
-    if(url != null)
-      fotoUrl = url;
-
-    print("fotoUrl $fotoUrl");
-
-    //print(url);
-
-    print("Termino");
-  }
-
   crearMyData() async{
 
     DatabaseReference ref = FirebaseDatabase.instance.reference();
@@ -56,9 +36,6 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       for (var key in keys) {
         print(data[key]['lugar']);
         print(data[key]['latitud']);
-        //getUrl(data[key]['fotoId']);
-
-        //getUrl(data[key]['fotoId']);
 
         myData d = new myData(
           data[key]['titulo'],
@@ -69,15 +46,13 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
           data[key]['dia'],
           data[key]['mes'],
           data[key]['año'],
-          data[key]['lugar']
-          //data[key]['latitud'],
+          data[key]['lugar'],
+          data[key]['num'],
           //data[key]['longitud'],
         );
-        //print(d.fotoId);
-
         allData.add(d);
       }
-
+      allData.sort((a,b) => b.num.compareTo(a.num));
 
       for (var key in keys) {
         if(nick==data[key]['nickName']) {
@@ -90,15 +65,13 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             data[key]['dia'],
             data[key]['mes'],
             data[key]['año'],
-              data[key]['lugar']
-            //data[key]['latitud'],
+            data[key]['lugar'],
+            data[key]['num'],
             //data[key]['longitud'],
           );
           allData2.add(e);
-          //print(e.fotoId);
-        }
-      }
-
+        }}
+      allData2.sort((a,b) => b.num.compareTo(a.num));
 
       setState(() {
         print('Length : ${allData.length}');
@@ -110,24 +83,21 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
   @override
   void initState() {
-      //super.initState();
+
     getnickName();
-    print("aqui");
-    //getUrl();
     crearMyData();
     controller = new TabController(length: 2, vsync: this);
-
-
-  }
+    }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).primaryColor,
 
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Ucabmoji Home",style: TextStyle(fontSize: 25),),
+          centerTitle: true,
+        title: Text("Ucabmoji",style: TextStyle(fontSize: 25),),
         elevation: 5,
         bottom: new TabBar(
           unselectedLabelColor: Colors.grey,
@@ -164,7 +134,6 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                     : new ListView.builder(
                   itemCount: allData.length,
                   itemBuilder: (_, index) {
-                    //getUrl(allData[index].fotoId);
                     return UI(
                       allData[index].titulo,
                       allData[index].comentario,
@@ -175,7 +144,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                       allData[index].mes,
                       allData[index].year,
                       allData[index].lugar,
-                      //allData[index].lat,
+                      allData[index].num,
                       //allData[index].long
                     );
                   },
@@ -189,7 +158,6 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                     : new ListView.builder(
                   itemCount: allData2.length,
                   itemBuilder: (_, index) {
-                    //getUrl(allData2[index].fotoId);
                     return UI(
                       allData2[index].titulo,
                       allData2[index].comentario,
@@ -200,7 +168,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                         allData2[index].mes,
                         allData2[index].year,
                         allData2[index].lugar,
-                        //allData2[index].lat,
+                        allData2[index].num,
                         //allData2[index].long
                     );
                   },
@@ -214,7 +182,9 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       int dia, int mes, int year,
       //double lat, double long,
       String lugar,
+      int num,
       ){
+
     return new Card(
         margin: EdgeInsets.all(15.0),
         elevation:4,
@@ -235,7 +205,6 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
                       //Row(
                       //children: <Widget>[
-
                       //new Container(
                       //height: 40.0,
                       //width: 40.0,
@@ -247,7 +216,6 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                       //"https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=1e8892f2-9da7-46f6-836a-936a51d234ca")),
                       //),
                       //),
-
 
                       new SizedBox(
                         width: 10.0,
@@ -267,26 +235,12 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                   ),
                 ),),
 
+              Divider(),
+
+              Image.network(fotoUrl, width: 200,height: 200,),
 
               Divider(),
-              //Center(
-              //  child:fotoUrl == null
-              //      ? new Text('No image selected')
-              //      : new Image.network(fotoUrl)
-              //),
-              //Text(fotoUrl),
-              Image.network(fotoUrl, width: 200,height: 200,),
-              //Text(fotoId),
-              //Center(
-              //fit: FlexFit.loose,
-              //child:
-                  //new Image.asset("design/ucabista.png", scale: 5,)
-              //new Image.network(getUrl(fotoId)
-                //fotoId ,height: 120,width: 120,
-                //fit: BoxFit.cover,
-              //),
-              //),
-              Divider(),
+
               Container(//color:Theme.of(context).accentColor,
                 child:Column(
                   children:<Widget>[
@@ -341,7 +295,6 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                   ],
                 ),
                 //),
-
               ),]));
   }
 

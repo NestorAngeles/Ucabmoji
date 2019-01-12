@@ -28,6 +28,7 @@ class _SignupPageState extends State<SignupPage> {
   List<String> nicks = new List();
 
   void initState() {
+
     DatabaseReference ref = FirebaseDatabase.instance.reference();
     ref.child('Nicks').once().then((DataSnapshot snap) {
       var keys = snap.value.keys;
@@ -42,6 +43,7 @@ class _SignupPageState extends State<SignupPage> {
         print('Length : ${nicks.length}');
       });
     });
+
   }
 
   bool comprobarNick(){

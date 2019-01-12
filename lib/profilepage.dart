@@ -147,6 +147,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(title: Text("Perfil"),backgroundColor: Theme.of(context).primaryColor,
+            automaticallyImplyLeading: false,
+            centerTitle: true,
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.settings),

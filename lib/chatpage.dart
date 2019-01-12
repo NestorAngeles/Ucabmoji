@@ -6,6 +6,8 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Mensajes"),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.settings),

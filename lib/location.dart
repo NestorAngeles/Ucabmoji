@@ -136,6 +136,8 @@ class _MyLocationState extends State<MyLocation> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(title: Text("Ubicacion"),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.settings),

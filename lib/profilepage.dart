@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter_ucabmoji/ajustes.dart';
 import 'package:flutter_ucabmoji/services/usermanagement.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -145,7 +146,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+        appBar: AppBar(title: Text("Perfil"),backgroundColor: Theme.of(context).primaryColor,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.push(context,
+                        new MaterialPageRoute(builder: (context) => new Ajustes()));
+                  }
+              ),]),
+      backgroundColor: Colors.white,
         body: new Stack(
       children: <Widget>[
         Positioned(
@@ -158,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 150.0,
                     height: 150.0,
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).primaryColor,
                         image: DecorationImage(
                             image: NetworkImage(profilePicUrl),
                             fit: BoxFit.cover),
@@ -168,11 +178,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         ])),
                 SizedBox(height: 20.0),
                 getLoader(),
-                SizedBox(height: 65.0),
+                SizedBox(height: 40.0),
                 Text(
                   nickName,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                       fontSize: 30.0,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Montserrat'),
@@ -181,37 +191,39 @@ class _ProfilePageState extends State<ProfilePage> {
                 Text(
                   'Estudiante',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                       fontSize: 17.0,
                       fontStyle: FontStyle.italic,
                       fontFamily: 'Montserrat'),
                 ),
-                SizedBox(height: 75.0),
+                SizedBox(height: 50.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Container(
-                        height: 30.0,
-                        width: 110.0,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20.0),
-                          shadowColor: Colors.greenAccent,
-                          color: Colors.green,
-                          elevation: 7.0,
-                          child: GestureDetector(
-                            onTap: () {
-                              editName(context);
-                            },
-                            child: Center(
-                              child: Text(
-                                'Editar Nombre',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat'),
-                              ),
-                            ),
-                          ),
-                        )),
+
+                    //Container(
+                        //height: 30.0,
+                        //width: 110.0,
+                        //child: Material(
+                          //borderRadius: BorderRadius.circular(20.0),
+                          //shadowColor: Colors.greenAccent,
+                          //color: Colors.green,
+                          //elevation: 7.0,
+                          //child: GestureDetector(
+                            //onTap: () {
+                              //editName(context);
+                            //},
+                            //child: Center(
+                              //child: Text(
+                                //'Editar Nombre',
+                                //style: TextStyle(
+                                    //color: Colors.white,
+                                    //fontFamily: 'Montserrat'),
+                              //),
+                            //),
+                          //),
+                        //)),
+
                     Container(
                         height: 30.0,
                         width: 110.0,

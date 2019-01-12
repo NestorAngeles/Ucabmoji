@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ucabmoji/emojizarpage2.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
@@ -23,9 +24,104 @@ class _EmojizarState extends State<Emojizar> {
   StreamSubscription<Map<String,double>> locationSubscription;
 
   Location location = new Location();
-  String error;
-
+  String error,lugar;
+  bool enLaUCAB;
   double lat,long;
+
+
+  getLugar(){
+
+    //UCAB
+    if((lat<8.298796 && lat>8.295516) && (long< -62.709837 && long> -62.713232)) {
+      print("estas en la uni");
+      lugar = "UCAB";
+
+      //Canchas
+      if((lat<8.298807 && lat>8.297636) && (long> -62.711683 && long< -62.709460)) {
+        print("canchas");
+        lugar = "Canchas Deportivas";
+      }
+
+      //Caja negra
+      if((lat<8.297299 && lat>8.297131) && (long> -62.710767 && long< -62.710524)) {
+        print("caja negra");
+        lugar = "Caja Negra";
+      }
+
+      //patos
+      if((lat<8.296998 && lat>8.296583) && (long> -62.711860 && long< -62.711297)) {
+        print("Los patos");
+        lugar = "Los patos / Biblioteca";
+      }
+
+      //Casa del estudiante
+      if((lat<8.296849 && lat>8.296502) && (long> -62.712262 && long< -62.711873)) {
+        print("Casa del estudiante");
+        lugar = "Casa del Estudiante";
+      }
+
+      //Anfiteatro
+      if((lat<8.296502 && lat>8.296215) && (long> -62.712124 && long< -62.711743)) {
+        print("Anfiteatro");
+        lugar = "Anfiateatro";
+      }
+
+      //Modulo 1
+      if((lat<8.296931 && lat>8.296497) && (long> -62.710924 && long< -62.710508)) {
+        print("Modulo 1");
+        lugar = "Modulo 1";
+      }
+
+      //Modulo 2
+      if((lat<8.296723 && lat>8.296358) && (long> -62.711215 && long< -62.710924)) {
+        print("Modulo 2");
+        lugar = "Modulo 2";
+      }
+
+      //Modulo AR
+      if((lat<8.296367 && lat>8.296009) && (long> -62.711494 && long< -62.711215)) {
+        print("Modulo AR");
+        lugar = "Modulo AR";
+      }
+
+      //Modulo 4
+      if((lat<8.296189 && lat>8.295772) && (long> -62.711862 && long< -62.711494)) {
+        print("Modulo 4");
+        lugar = "Modulo 4";
+      }
+
+      //Escuelas
+      if((lat<8.297242 && lat>8.296053) && (long> -62.712637 && long< -62.712144)) {
+        print("Escuelas");
+        lugar = "Escuelas / Laboratorios";
+      }
+
+      //Parada
+      if((lat<8.296980 && lat>8.295850) && (long> -62.713218 && long< -62.712613)) {
+        print("Parada");
+        lugar = "Parada UCAB";
+      }
+
+      //Patio central
+      if((lat<8.297471 && lat>8.296998) && (long> -62.712452 && long< -62.711454)) {
+        print("Patio central");
+        lugar = "Patio Central";
+      }
+
+      //Estacionamiento
+      if((lat<8.297636 && lat>8.296836) && (long> -62.711297 && long< -62.710767)) {
+        print("Estacionamiento");
+        lugar = "Estacionamiento";
+      }
+
+      enLaUCAB=true;
+    }else{
+      print("No estas en la Uni");
+      lugar = "";
+      enLaUCAB = false;
+    }
+  }
+
 
   comprobarCorreo()async{
     List<String> nicks = new List();
@@ -42,7 +138,6 @@ class _EmojizarState extends State<Emojizar> {
       }
       print('Length: ${nicks.length}');
     });
-
   }
 
   void initState(){
@@ -94,12 +189,22 @@ class _EmojizarState extends State<Emojizar> {
                       new Image.asset('design/ucabista.png', width: 230.0, height: 286.0,),
                       new InkWell(
                           onTap: () {
-                            comprobarCorreo();
-                            print(lat);
-                            print(long);
-                            print('Lat/Long:${currentLocation['latitude']}/${currentLocation['longitude']}');
-                            Navigator.push(context,
-                                new MaterialPageRoute(builder: (context) => new Camara(onSignedOut: widget.onSignedOut,lat: lat,long: long)));
+                            getLugar();
+                            if(enLaUCAB) {
+                              comprobarCorreo();
+                              print(lat);
+                              print(long);
+                              print(
+                                  'Lat/Long:${currentLocation['latitude']}/${currentLocation['longitude']}');
+                              Navigator.push(context,
+                                  new MaterialPageRoute(builder: (context) =>
+                                  new Camara(onSignedOut: widget.onSignedOut,
+                                      lat: lat,
+                                      long: long,
+                                      lugar: lugar)));
+                            }else{
+                              //showToast("Solo puedes emojizar en la UCAB", false);
+                            }
                           },
                           child: new Container(
                               width: 200.0,
@@ -114,5 +219,25 @@ class _EmojizarState extends State<Emojizar> {
                                           fontSize: 24.0,
                                           color: Colors.white)))))]))));
   }
+
+  void showToast (String alerta, bool color) {
+    String error;
+
+    Color colors;
+    if(!color)
+      colors = Colors.red;
+    else
+      colors = Colors.green;
+
+    Fluttertoast.showToast(
+        backgroundColor: colors,
+        msg: alerta,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        textColor: Colors.white
+    );
+  }
+
 
 }

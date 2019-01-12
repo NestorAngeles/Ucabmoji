@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ucabmoji/emojizarpage4.dart';
 import 'package:flutter_ucabmoji/homepage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:random_string/random_string.dart' as random;
 
 class CrearPublicacion extends StatefulWidget {
 
-  CrearPublicacion({this.onSignedOut,this.image,this.lat,this.long});
+  CrearPublicacion({this.onSignedOut,this.image,this.lat,this.long,this.lugar});
   final VoidCallback onSignedOut;
   double lat,long;
-
+  String lugar;
   File image;
 
   @override
@@ -29,7 +31,14 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
   GlobalKey<FormState> _key = new GlobalKey();
   bool _autovalidate = false;
 
-  String titulo, emoji, comentario, image;
+  String titulo, emoji, comentario, image,foto;
+
+  publicarFoto(){
+    foto = random.randomAlphaNumeric(5)+nickName+".png";
+
+    final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('PostFotos/${foto}');
+    final StorageUploadTask task = firebaseStorageRef.putFile(widget.image);
+  }
 
   bool nextPage(){
     if (_key.currentState.validate()) {
@@ -104,6 +113,7 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
             print(widget.lat);
             if(nextPage()){
               sendNick();
+              publicarFoto();
               Navigator.push(context,
                   new MaterialPageRoute(builder: (context) => new PublicarPost(
                     titulo: titulo,
@@ -115,6 +125,8 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
                     long: widget.long,
                     nickName: nickName,
                     profilePicUrl: profilePicUrl,
+                    foto: foto,
+                    lugar: widget.lugar
               )));
             }
           },
@@ -129,7 +141,7 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
       children: <Widget>[
         Center(
           child:
-        new Image.file(widget.image,scale: 3),),
+        new Image.file(widget.image,scale: 1.5),),
         new SizedBox(height: 20,),
         new Divider(indent: 1,height: 10,),
         new Row(

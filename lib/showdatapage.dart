@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ucabmoji/ajustes.dart';
 import 'package:flutter_ucabmoji/myData.dart';
@@ -16,19 +17,36 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
   List<myData> allData2 = [];
   TabController controller;
 
-  String nick;
+  String nick,fotoUrl;
 
-  getnickName() async{
+    getnickName() async{
     await FirebaseAuth.instance.currentUser().then((user) {
       nick = user.displayName;
     }).catchError((e) {
       print(e);
     });}
 
-  @override
-  void initState() {
-    getnickName();
-    controller = new TabController(length: 2, vsync: this);
+
+    getUrl(String fotoId) async {
+    print("Comenzo");
+
+    final ref =  FirebaseStorage.instance.ref().child("PostFotos").child(fotoId);//.child(fotoId); //child("D1260Nes.png");
+    String url =  await ref.getDownloadURL(); //as String;
+    print(url);
+
+    //fotoUrl = "https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=1e8892f2-9da7-46f6-836a-936a51d234ca";
+
+    if(url != null)
+      fotoUrl = url;
+
+    print("fotoUrl $fotoUrl");
+
+    //print(url);
+
+    print("Termino");
+  }
+
+  crearMyData() async{
 
     DatabaseReference ref = FirebaseDatabase.instance.reference();
     ref.child('Post').once().then((DataSnapshot snap) {
@@ -36,15 +54,31 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       var data = snap.value;
       allData.clear();
       for (var key in keys) {
-        print(data[key]['emoji']);
+        print(data[key]['lugar']);
+        print(data[key]['latitud']);
+        //getUrl(data[key]['fotoId']);
+
+        //getUrl(data[key]['fotoId']);
+
         myData d = new myData(
           data[key]['titulo'],
           data[key]['comentario'],
           data[key]['nickName'],
           data[key]['emoji'],
+          data[key]['fotoUrl'],
+          data[key]['dia'],
+          data[key]['mes'],
+          data[key]['año'],
+          data[key]['lugar']
+          //data[key]['latitud'],
+          //data[key]['longitud'],
         );
+        //print(d.fotoId);
+
         allData.add(d);
       }
+
+
       for (var key in keys) {
         if(nick==data[key]['nickName']) {
           myData e = new myData(
@@ -52,21 +86,44 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             data[key]['comentario'],
             data[key]['nickName'],
             data[key]['emoji'],
+            data[key]['fotoUrl'],
+            data[key]['dia'],
+            data[key]['mes'],
+            data[key]['año'],
+              data[key]['lugar']
+            //data[key]['latitud'],
+            //data[key]['longitud'],
           );
           allData2.add(e);
+          //print(e.fotoId);
         }
       }
+
+
       setState(() {
         print('Length : ${allData.length}');
         print('Length : ${allData2.length}');
       });
     });
+
+  }
+
+  @override
+  void initState() {
+      //super.initState();
+    getnickName();
+    print("aqui");
+    //getUrl();
+    crearMyData();
+    controller = new TabController(length: 2, vsync: this);
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Colors.white,
 
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -107,11 +164,19 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                     : new ListView.builder(
                   itemCount: allData.length,
                   itemBuilder: (_, index) {
+                    //getUrl(allData[index].fotoId);
                     return UI(
                       allData[index].titulo,
                       allData[index].comentario,
                       allData[index].nickName,
                       allData[index].emoji,
+                      allData[index].fotoUrl,
+                      allData[index].dia,
+                      allData[index].mes,
+                      allData[index].year,
+                      allData[index].lugar,
+                      //allData[index].lat,
+                      //allData[index].long
                     );
                   },
                 )),
@@ -124,11 +189,19 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                     : new ListView.builder(
                   itemCount: allData2.length,
                   itemBuilder: (_, index) {
+                    //getUrl(allData2[index].fotoId);
                     return UI(
                       allData2[index].titulo,
                       allData2[index].comentario,
                       allData2[index].nickName,
                       allData2[index].emoji,
+                      allData2[index].fotoUrl,
+                        allData2[index].dia,
+                        allData2[index].mes,
+                        allData2[index].year,
+                        allData2[index].lugar,
+                        //allData2[index].lat,
+                        //allData2[index].long
                     );
                   },
                 )),
@@ -137,7 +210,11 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
   }
 
 
-  Widget UI(String titulo, String comentario, String nickName,String emoji) {
+  Widget UI(String titulo, String comentario, String nickName,String emoji,var fotoUrl,
+      int dia, int mes, int year,
+      //double lat, double long,
+      String lugar,
+      ){
     return new Card(
         margin: EdgeInsets.all(15.0),
         elevation:4,
@@ -193,10 +270,19 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
               Divider(),
               //Center(
+              //  child:fotoUrl == null
+              //      ? new Text('No image selected')
+              //      : new Image.network(fotoUrl)
+              //),
+              //Text(fotoUrl),
+              Image.network(fotoUrl, width: 200,height: 200,),
+              //Text(fotoId),
+              //Center(
               //fit: FlexFit.loose,
               //child:
-              //new Image.file(
-                //image,height: 120,width: 120,
+                  //new Image.asset("design/ucabista.png", scale: 5,)
+              //new Image.network(getUrl(fotoId)
+                //fotoId ,height: 120,width: 120,
                 //fit: BoxFit.cover,
               //),
               //),
@@ -204,11 +290,24 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
               Container(//color:Theme.of(context).accentColor,
                 child:Column(
                   children:<Widget>[
+                    
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+
+                        children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0,0,0,0),
+                        child: Image.asset("design/location.png",scale: 25,)
+                      ),
                     Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text("Long:  / Lat: ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                      padding: const EdgeInsets.fromLTRB(0,5,5,5),
+                      child: Text("$lugar",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
                     ),
+                    ]),
                     Divider(),
+                    
+                    
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
@@ -234,7 +333,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                           Padding(
                               padding: const EdgeInsets.fromLTRB(0,10,15,0),
                               child:
-                              Text(DateTime.now().day.toString()+"/"+DateTime.now().month.toString()+"/"+DateTime.now().year.toString(),
+                              Text(dia.toString()+"/"+mes.toString()+"/"+year.toString(),
                                   style: TextStyle(color: Colors.grey))),
                         ],
                       ),

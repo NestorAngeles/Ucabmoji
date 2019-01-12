@@ -7,9 +7,10 @@ import 'package:image_picker/image_picker.dart';
 
 class Camara extends StatefulWidget {
 
-  Camara({this.onSignedOut,this.lat,this.long});
+  Camara({this.onSignedOut,this.lat,this.long,this.lugar});
   final VoidCallback onSignedOut;
   double lat,long;
+  String lugar;
 
   @override
   _CamaraState createState() => new _CamaraState();
@@ -42,7 +43,7 @@ class _CamaraState extends State<Camara> {
     //if(_image !=null)
       //showToast("Ya hay una imagen seleccionada");
     //else {
-      var image = await ImagePicker.pickImage(source: ImageSource.gallery,maxHeight: 720,maxWidth: 720);
+      var image = await ImagePicker.pickImage(source: ImageSource.gallery,maxHeight: 400,maxWidth: 400);
       setState(() {
         _image = image;
         if(_image!=null) {
@@ -87,13 +88,15 @@ class _CamaraState extends State<Camara> {
             child: Text(next,style: TextStyle(color: siguiente,fontSize: 20)),
             onPressed: (){
               if(isImage) {
+                print(widget.lugar);
                 Navigator.push(context,
                     new MaterialPageRoute(
                         builder: (context) => new CrearPublicacion(
                           image: _image,
                           onSignedOut: widget.onSignedOut,
                           lat: widget.lat,
-                          long: widget.long)));
+                          long: widget.long,
+                          lugar: widget.lugar)));
               }
             },
           )

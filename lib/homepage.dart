@@ -75,16 +75,16 @@ class _HomePageState extends State<HomePage>
     return new Scaffold(
 
       bottomNavigationBar: new Material(
-        color: Colors.white,
-        //color: Theme.of(context).primaryColor,
+        //color: Colors.white,
+        color: Theme.of(context).primaryColor,
         child: TabBar(
           controller: tabController,
           tabs: <Widget>[
-            new Tab(icon: Icon(Icons.home,color: Theme.of(context).primaryColor)),
-            new Tab(icon: Icon(Icons.chat,color: Theme.of(context).primaryColor)),
-            new Tab(icon: Icon(Icons.camera,color: Theme.of(context).primaryColor)),
-            new Tab(icon: Icon(Icons.my_location,color: Theme.of(context).primaryColor)),
-            new Tab(icon: Icon(Icons.person,color: Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.home,color: Colors.white)),//Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.chat,color: Colors.white)),//Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.camera,color: Colors.white)),//Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.my_location,color: Colors.white)),//Theme.of(context).primaryColor)),
+            new Tab(icon: Icon(Icons.person,color: Colors.white)),//Theme.of(context).primaryColor)),
           ],
         ),
       ),

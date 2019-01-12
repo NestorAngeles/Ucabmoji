@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,68 +11,118 @@ import 'package:flutter_ucabmoji/rootpage.dart';
 import 'package:flutter_ucabmoji/widgets/post.dart';
 import 'package:random_string/random_string.dart' as random;
 
-class PublicarPost extends StatelessWidget {
+class PublicarPost extends StatefulWidget {
 
-  PublicarPost({this.onSignedOut,this.titulo,this.comentario,this.image,this.emoji,this.lat,this.long,this.nickName,this.profilePicUrl});
+  PublicarPost({this.onSignedOut,this.titulo,this.comentario,this.image,this.emoji,this.lat,this.long,this.nickName,this.profilePicUrl,this.foto,this.lugar});
 
   final VoidCallback onSignedOut;
-  String titulo, comentario, nickName,profilePicUrl,foto,emoji;
+  String titulo, comentario, nickName,profilePicUrl,foto,emoji,lugar;
   double lat,long;
   File image;
 
 
+  @override
+  _PublicarPostState createState() => new _PublicarPostState();
+}
+
+
+class _PublicarPostState extends State<PublicarPost> {
+
+  Color elcolor = Colors.grey;
+
+  String boton= "ESPERE...";
+  String url;
+
+  bool emojizar=false;
+
+  void initState(){
+    print("initSATETE");
+
+    Timer(Duration(seconds: 7), () {
+      setState(() {
+        elcolor = Colors.green;
+        boton = "EMOJIZAR";
+        getUrl();
+        emojizar=true;
+      });
+    });
+    //getUrl();
+  }
+
+
+  getUrl() async{
+    final StorageReference storageRef = FirebaseStorage.instance.ref().child('PostFotos').child(widget.foto);
+    print("ke pasa");
+
+    url = await storageRef.getDownloadURL();
+    print("COÑO");
+    print("Aqui esta el $url");
+
+  }
 
   _sendToServer() async {
 
     await FirebaseAuth.instance.currentUser().then((user) {
-        profilePicUrl = user.photoUrl;
-        nickName = user.displayName;
+        widget.profilePicUrl = user.photoUrl;
+        widget.nickName = user.displayName;
     }).catchError((e) {
       print(e);
     });
 
-      print(nickName);
-      foto = random.randomAlphaNumeric(5)+nickName+".png";
-    final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('PostFotos/${foto}');
-    final StorageUploadTask task = firebaseStorageRef.putFile(image);
-
+      print(widget.nickName);
 
     Firestore.instance.collection('/Post').add({
-      "titulo": titulo,
-      "comentario": comentario,
+      "titulo": widget.titulo,
+      "comentario": widget.comentario,
       "ubicacion": 0,
-      "emoji": emoji,
-      "nickName": nickName,
-      "profilePic": profilePicUrl,
-      "fotoId": foto,
-      "latitud":lat,
-      "longitud": long,
-      //"momento" : DateTime.now(),
+
+      "emoji": widget.emoji,
+      "nickName": widget.nickName,
+      "profilePic": widget.profilePicUrl,
+      "fotoId": widget.foto,
+
+      "latitud":widget.lat,
+      "longitud": widget.long,
+      "lugar": widget.lugar,
+
       "dia" : DateTime.now().day,
       "mes" : DateTime.now().month,
       "año" : DateTime.now().year,
       "hora" : DateTime.now().hour,
-      "minutos" : DateTime.now().minute
+      "minutos" : DateTime.now().minute,
+
+      "fotoUrl" : 'hey',
     });
 
       DatabaseReference ref = FirebaseDatabase.instance.reference();
       var data = {
-        "titulo": titulo,
-        "comentario": comentario,
+        "titulo": widget.titulo,
+        "comentario": widget.comentario,
         "ubicacion": 0,
-        "emoji": emoji,
-        "nickName": nickName,
-        "profilePic": profilePicUrl,
-        "fotoId": foto,
-        //"momento" : DateTime.now(),
+        "emoji": widget.emoji,
+
+        "nickName": widget.nickName,
+        "profilePic": widget.profilePicUrl,
+        "fotoId": widget.foto,
+
+        "latitud":widget.lat,
+        "longitud": widget.long,
+        "lugar": widget.lugar,
+
         "dia" : DateTime.now().day,
         "mes" : DateTime.now().month,
         "año" : DateTime.now().year,
         "hora" : DateTime.now().hour,
-        "minutos" : DateTime.now().minute
-      };
-      ref.child('Post').push().set(data);
-      print("posted");
+        "minutos" : DateTime.now().minute,
+
+        "fotoUrl" :  url,
+       };
+      ref.child('Post').push().set(data).then((Value){
+        print("posted");
+      }).catchError((e){
+        print(e);
+      });
+
     }
 
   @override
@@ -119,7 +170,7 @@ class PublicarPost extends StatelessWidget {
                           width: 10.0,
                         ),
                         new Text(
-                          titulo,
+                          widget.titulo,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),
                         ),
@@ -139,7 +190,7 @@ class PublicarPost extends StatelessWidget {
                 //fit: FlexFit.loose,
                 //child:
                 new Image.file(
-                image,height: 120,width: 120,
+                widget.image,height: 200,width: 200,
                   //fit: BoxFit.cover,
                 ),
               //),
@@ -147,15 +198,25 @@ class PublicarPost extends StatelessWidget {
               Container(//color:Theme.of(context).accentColor,
                 child:Column(
               children:<Widget>[
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text("Long: $long / Lat: $lat",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
-              ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+
+                    children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(0,0,0,0),
+                          child: Image.asset("design/location.png",scale: 25,)
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0,5,5,5),
+                        child: Text("${widget.lugar} ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                      ),
+                    ]),
               Divider(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  comentario,
+                  widget.comentario,
                   style: TextStyle(),
                 ),
               ),
@@ -167,12 +228,12 @@ class PublicarPost extends StatelessWidget {
                     new Container(
                       height: 40.0,
                       width: 40.0,
-                      child: Image.asset("design/$emoji.png"),),
+                      child: Image.asset("design/${widget.emoji}.png"),),
                     new SizedBox(
                       width: 10.0,
                     ),
                     Expanded(
-                      child: new Text(nickName,style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: new Text(widget.nickName,style: TextStyle(fontWeight: FontWeight.bold),),
                       ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0,10,15,0),
@@ -192,20 +253,25 @@ class PublicarPost extends StatelessWidget {
             SizedBox(height: 25,),
             InkWell(
             onTap: () {
-              _sendToServer();
-              Navigator.push(context,
-                  new MaterialPageRoute(builder: (context) => new RootPage(auth: new Auth())));
+              if(emojizar) {
+                //publicarFoto();
+                //tiempo();
+                _sendToServer();
+                Navigator.push(context,
+                    new MaterialPageRoute(
+                        builder: (context) => new RootPage(auth: new Auth())));
+              }
             },
             child:
             Container(
             width: 200.0,
             height: 50.0,
             decoration: new BoxDecoration(
-                color: Colors.green,
+                color: elcolor,
                 border: new Border.all(color: Colors.white, width: 1.5),
                 borderRadius: new BorderRadius.circular(10.0)),
             child: new Center(
-                child: new Text('EMOJIZAR',
+                child: new Text(boton,
                     style: new TextStyle(
                         fontSize: 24.0,
                         color: Colors.white))))),

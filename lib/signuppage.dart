@@ -25,6 +25,7 @@ class _SignupPageState extends State<SignupPage> {
   String _password;
   String _nickName;
 
+  final formKey = new GlobalKey<FormState>();
   List<String> nicks = new List();
 
   void initState() {
@@ -46,18 +47,11 @@ class _SignupPageState extends State<SignupPage> {
 
   }
 
-  bool comprobarNick(){
-    bool seguir;
+  String comprobarNick(String nick){
 
-    if(nicks.contains(_nickName.toLowerCase())){
-      showToast(" Ya esta existe ese NickName", false);
-      seguir = false;
-      return seguir;
-    }else{
-      seguir = true;
-      return seguir;
+    if(nicks.contains(nick.toLowerCase())){
+      return " Ya esta existe ese NickName";
     }
-
   }
 
   subirNick(){
@@ -69,14 +63,30 @@ class _SignupPageState extends State<SignupPage> {
     print("posted nick");
   }
 
+  bool validateAndSave(){
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+        return true;
+      } else {
+        return false;
+      }
+    }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
-        body: Column(
+        body:
+        ListView(
+            children: <Widget>[
+            Form(
+            key: formKey,
+            child:
+        Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 20.0),
+              SizedBox(height: 50.0),
               Container(
                   child: new Center(
                     child: new Image.asset("design/ucabista.png",scale: 3,),
@@ -85,7 +95,7 @@ class _SignupPageState extends State<SignupPage> {
                   padding: EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
                   child: Column(
                     children: <Widget>[
-                      TextField(
+                      TextFormField(
                         decoration: InputDecoration(
                             labelText: 'NICK NAME',
                             labelStyle: TextStyle(
@@ -96,12 +106,13 @@ class _SignupPageState extends State<SignupPage> {
                             // hintStyle: ,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Theme.of(context).primaryColor))),
-                        onChanged: (val) {
+                        onSaved: (val) {
                           _nickName = val;
                         },
+                        validator: (value) => comprobarNick(value),
                       ),
                       SizedBox(height: 10.0),
-                      TextField(
+                      TextFormField(
                         decoration: InputDecoration(
                             labelText: 'CORREO UCAB ',
                             labelStyle: TextStyle(
@@ -110,12 +121,13 @@ class _SignupPageState extends State<SignupPage> {
                                 color: Theme.of(context).primaryColor),
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Theme.of(context).primaryColor))),
-                        onChanged: (val) {
+                        onSaved: (val) {
                           _email= val;
                         },
+                        validator: (value) => emailUcab(value),
                       ),
                       SizedBox(height: 10.0),
-                      TextField(
+                      TextFormField(
                         decoration: InputDecoration(
                             labelText: 'CONTRASEÑA ',
                             labelStyle: TextStyle(
@@ -124,10 +136,11 @@ class _SignupPageState extends State<SignupPage> {
                                 color: Theme.of(context).primaryColor),
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Theme.of(context).primaryColor))),
-                        onChanged: (val) {
+                        onSaved: (val) {
                           _password = val;
                         },
                         obscureText: true,
+                        validator: (value) => validarClave(value),
                       ),
                       SizedBox(height: 50.0),
                       Container(
@@ -136,10 +149,9 @@ class _SignupPageState extends State<SignupPage> {
                             borderRadius: BorderRadius.circular(20.0),
                             color: Theme.of(context).primaryColor,
                             elevation: 7.0,
-                            child: GestureDetector(
+                            child: InkWell(
                               onTap: () {
 
-                                if(comprobarNick() && emailUcab() && validarClave()){
                                   showToast("Registrando Usuario", true);
                                 FirebaseAuth.instance
                                     .createUserWithEmailAndPassword(
@@ -175,7 +187,7 @@ class _SignupPageState extends State<SignupPage> {
                                   showToast(e.toString(),false);
 
                                 });
-                              }},
+                              },
                               child: Center(
                                 child: Text(
                                   'Registrarse',
@@ -215,26 +227,23 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ],
                   )),
-            ]));
+            ]),),
+              SizedBox(height: 200,),
+    ]));
   }
 
 
-  bool emailUcab(){
-    if(_email.endsWith("@est.ucab.edu.ve") || _email.endsWith("@ucab.edu.ve"))
-      return true;
-    else {
-      showToast("Correo Invalido", false);
-      return false;
-    }
+  String emailUcab(String email){
+    if(!_email.endsWith("@est.ucab.edu.ve") || !_email.endsWith("@ucab.edu.ve"))
+      return "Correo invalido (ejemplo@est.ucab.edu.ve)";
   }
 
-  bool validarClave(){
+  String validarClave(String correo){
     if(_password.length<6){
       showToast("La contraseña deben ser mínimo 6 caracteres", false);
-      return false;
-    }else{
-      return true;
+      return "Mínimo 6 caracteres";
     }
+
   }
 
   void showToast (String alerta, bool color) {

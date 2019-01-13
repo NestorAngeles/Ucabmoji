@@ -43,9 +43,10 @@ class _CamaraState extends State<Camara> {
     //if(_image !=null)
       //showToast("Ya hay una imagen seleccionada");
     //else {
-      var image = await ImagePicker.pickImage(source: ImageSource.gallery,maxHeight: 400,maxWidth: 400);
+      var image = await ImagePicker.pickImage(source: ImageSource.camera,maxHeight: 400,maxWidth: 400);
       setState(() {
-        _image = image;
+        if(image!=null)
+          _image = image;
         if(_image!=null) {
           siguiente = Colors.green;
           isImage = true;
@@ -114,7 +115,9 @@ class _CamaraState extends State<Camara> {
         child:Icon(Icons.photo_camera),
         onPressed: () {
           if(!isImage)
-          getImage();
+            getImage();
+          else
+            editName(context);
         }),
 
     );
@@ -126,5 +129,43 @@ class _CamaraState extends State<Camara> {
     });
   }
 
+  Future<bool> editName(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Center(child:
+              Text('¡CUIDADO!', style: TextStyle(fontSize: 15.0)),),
+            content:
+                Container(
+                  height: 120,
+                  width: 120,
+                child:
+                Column(
+                children:<Widget>[
+              Text("Si tomas otra foto la anterior será remplazada."),
+              SizedBox(height: 10,),
+              Center(
+              child: Row(
+              children: <Widget>[
+              FlatButton(
+                child: Text('Regresar'),
+                textColor: Colors.blue,
+                onPressed: () {
+                  Navigator.pop(context);
+                },),
+              FlatButton(
+                child: Text('Continuar',style: TextStyle(color: Colors.red),),
+                textColor: Colors.blue,
+                onPressed: () {
+                  getImage();
+                  Navigator.pop(context);
+                },)
+              ])),
+            ],
+          )));
+        });
+  }
 
 }

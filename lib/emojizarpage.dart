@@ -24,12 +24,19 @@ class _EmojizarState extends State<Emojizar> {
   StreamSubscription<Map<String,double>> locationSubscription;
 
   Location location = new Location();
-  String error,lugar;
+  String error,lugar,error2;
   bool enLaUCAB;
   double lat,long;
 
 
   getLugar(){
+
+    if(lat==null || long==null){
+      enLaUCAB =false;
+      lugar="";
+      error2="Error al obtener su ubicacion";
+      return;
+    }
 
     //UCAB
     if((lat<8.298796 && lat>8.295516) && (long< -62.709837 && long> -62.713232)) {
@@ -119,6 +126,12 @@ class _EmojizarState extends State<Emojizar> {
       print("No estas en la Uni");
       lugar = "";
       enLaUCAB = false;
+      error2="Debes estar en la UCAB para EMOJIZAR";
+    }
+    if((lat<8.302044 && lat>8.301336) && (long< -62.732182 && long> -62.733522)) {
+      print("Estas en los Raudales");
+      lugar = "Los Raudales";
+      enLaUCAB=true;
     }
   }
 
@@ -190,7 +203,7 @@ class _EmojizarState extends State<Emojizar> {
                       new InkWell(
                           onTap: () {
                             getLugar();
-                            if(enLaUCAB) {
+                            //if(enLaUCAB) {
                               comprobarCorreo();
                               print(lat);
                               print(long);
@@ -202,9 +215,10 @@ class _EmojizarState extends State<Emojizar> {
                                       lat: lat,
                                       long: long,
                                       lugar: lugar)));
-                            }else{
-                              //showToast("Solo puedes emojizar en la UCAB", false);
-                            }
+                            //}else{
+                              //showToast(error2, false);
+                              //error="";
+                            //}
                           },
                           child: new Container(
                               width: 200.0,

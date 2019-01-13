@@ -58,7 +58,23 @@ flutter:
     - design/no_icon.png
     - design/yes_icon.png
     - design/modulo_Aulas.jpg
+
     - design/location.png
+    - design/anfiteatro.png
+    - design/cajaNegra.png
+    - design/canchas.png
+    - design/casaEstudiante.png
+    - design/escuelas.png
+    - design/estacionamiento.png
+    - design/modulo1.png
+    - design/modulo2.png
+    - design/moduloAR.png
+    - design/modulo4.png
+    - design/parada.png
+    - design/patioCentral.png
+    - design/patos.png
+    - design/mapa.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 

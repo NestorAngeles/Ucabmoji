@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:random_string/random_string.dart' as random;
 
 class ProfilePage extends StatefulWidget {
 
@@ -24,10 +24,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   final VoidCallback onSignedOut;
 
-  var profilePicUrl =
-      'https://pixel.nymag.com/imgs/daily/vulture/2017/06/14/14-tom-cruise.w700.h700.jpg';
+  var profilePicUrl = 'https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=1e8892f2-9da7-46f6-836a-936a51d234ca';
 
-  var nickName = 'User';
+  var nickName = '';
   bool isLoading = false;
   File selectedImage;
   UserManagement userManagement = new UserManagement();
@@ -39,7 +38,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     FirebaseAuth.instance.currentUser().then((user) {
       setState(() {
-        print("entrando");
         profilePicUrl = user.photoUrl;
         nickName = user.displayName;
       });
@@ -61,10 +59,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future uploadImage() async {
-    var randomno = Random(25);
+    String foto = random.randomAlphaNumeric(5)+nickName+".png";
+
     final StorageReference firebaseStorageRef = FirebaseStorage.instance
         .ref()
-        .child('profilepics/${randomno.nextInt(5000).toString()}.jpg');
+        .child('profilepics/${foto}');
     StorageUploadTask task = firebaseStorageRef.putFile(selectedImage);
 
     task.future.then((value) {
@@ -95,16 +94,6 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 100.0,
               child: Column(
                 children: <Widget>[
-                  TextField(
-                    decoration: InputDecoration(
-                        labelText: 'Nuevo Nick Name',
-                        labelStyle: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold)),
-                    onChanged: (value) {
-                      newNickName = value;
-                    },
-                  ),
                 ],
               ),
             ),

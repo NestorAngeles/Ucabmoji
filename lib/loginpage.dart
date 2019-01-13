@@ -21,15 +21,63 @@ class _LoginPageState extends State<LoginPage> {
 
   String _email;
   String _password;
+  final formKey = new GlobalKey<FormState>();
+
+
+  bool emailUcab(String correo){
+    String email = correo;
+
+    if(email.endsWith("@est.ucab.edu.ve") || email.endsWith("@ucab.edu.ve"))
+      return true;
+    else
+      return false;
+  }
+
+  String validadorCorreo(String value){
+    if(value.isEmpty)
+      return "Correo vacio";
+    if(!emailUcab(value))
+      return "Correo Invalido (ejemplo@est.ucab.edu.ve)";
+  }
+
+  String validadorPassword(String value){
+    if(value.isEmpty)
+      return "Contraseña vacia";
+    if(value.length<6)
+      return "Minimo 6 caracteres";
+  }
+
+  bool validateAndSave(){
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      if (emailUcab(_email)) {
+        print("Email: $_email, Contraseña: $_password");
+        return true;
+      } else {
+        print("Form is invalid");
+        return false;
+      }
+    }else{
+      print("Form is invalid");
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
-        body: Column(
+        body:
+        ListView(
+          children: <Widget>[
+        Form(
+        key: formKey,
+            child:
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 20.0),
+            SizedBox(height: 80.0),
             Container(
               child: new Center(
                 child: new Image.asset("design/ucabista.png",scale: 3),
@@ -38,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
                 child: Column(
                   children: <Widget>[
-                    TextField(
+                    TextFormField(
                       decoration: InputDecoration(
                           labelText: 'Correo UCAB',
                           labelStyle: TextStyle(
@@ -47,12 +95,13 @@ class _LoginPageState extends State<LoginPage> {
                               color: Theme.of(context).accentColor),
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Theme.of(context).primaryColor))),
-                      onChanged: (value) {
+                      onSaved: (value) {
                         _email = value;
                       },
+                      validator: (value) => validadorCorreo(value) ,
                     ),
                     SizedBox(height: 20.0),
-                    TextField(
+                    TextFormField(
                       decoration: InputDecoration(
                           labelText: 'Contraseña',
                           labelStyle: TextStyle(
@@ -61,26 +110,27 @@ class _LoginPageState extends State<LoginPage> {
                               color: Theme.of(context).accentColor),
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Theme.of(context).primaryColor))),
-                      onChanged: (val) {
+                      onSaved: (val) {
                         _password = val;
                       },
+                      validator: (value) => validadorPassword(value) ,
                       obscureText: true,
                     ),
                     SizedBox(height: 5.0),
-                    Container(
-                      alignment: Alignment(1.0, 0.0),
-                      padding: EdgeInsets.only(top: 15.0, left: 20.0),
-                      child: InkWell(
-                        child: Text(
-                          'Forgot Password',
-                          style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Montserrat',
-                              decoration: TextDecoration.underline),
-                        ),
-                      ),
-                    ),
+                    //Container(
+                      //alignment: Alignment(1.0, 0.0),
+                      //padding: EdgeInsets.only(top: 15.0, left: 20.0),
+                     // child: InkWell(
+                        //child: Text(
+                          //'Forgot Password',
+                          //style: TextStyle(
+                              //color: Theme.of(context).accentColor,
+                              //fontWeight: FontWeight.bold,
+                            //  fontFamily: 'Montserrat',
+                          //    decoration: TextDecoration.underline),
+                        //),
+                      //),
+                    //),
                     SizedBox(height: 40.0),
                     Container(
                       height: 40.0,
@@ -88,19 +138,21 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(20.0),
                         color: Theme.of(context).primaryColor,
                         elevation: 7.0,
-                        child: GestureDetector(
+                        child: InkWell(
                           onTap: () {
-                            showToast("Iniciando Sesion", true);
-                            FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: _email, password: _password)
-                                .then((FirebaseUser user) {
-                              widget.onSignedIn();
-                              //Navigator.of(context).pushReplacementNamed('/homepage');
-                            }).catchError((e) {
-                              showToast(e.toString(), false);
-                              print(e);
-                            });
+                            if(validateAndSave()) {
+                              showToast("Iniciando Sesion", true);
+                              FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                  email: _email, password: _password)
+                                  .then((FirebaseUser user) {
+                                widget.onSignedIn();
+                                //Navigator.of(context).pushReplacementNamed('/homepage');
+                              }).catchError((e) {
+                                showToast(e.toString(), false);
+                                print(e);
+                              });
+                            }
                           },
                           child: Center(
                             child: Text(
@@ -144,7 +196,10 @@ class _LoginPageState extends State<LoginPage> {
               ],
             )
           ],
-        ));
+        ),),
+            SizedBox(height: 200,)
+
+          ]));
   }
 
   void showToast (String alerta, bool color) {

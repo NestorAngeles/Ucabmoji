@@ -42,7 +42,7 @@ class _PublicarPostState extends State<PublicarPost> {
   void initState(){
     print("initSATETE");
 
-    Timer(Duration(seconds: 7), () {
+    Timer(Duration(seconds: 15), () {
       setState(() {
         elcolor = Colors.green;
         boton = "EMOJIZAR";
@@ -171,7 +171,10 @@ class _PublicarPostState extends State<PublicarPost> {
         appBar: AppBar(
           title: Text("Publicar"),
         ),
-        body: Column(children: <Widget>[
+        body:
+        new SingleChildScrollView(
+        child:
+        Column(children: <Widget>[
           Card(
               margin: EdgeInsets.all(15.0),
               elevation:4,
@@ -316,7 +319,7 @@ class _PublicarPostState extends State<PublicarPost> {
                     style: new TextStyle(
                         fontSize: 24.0,
                         color: Colors.white))))),
-        ])
+        ]))
     );
   }
 }

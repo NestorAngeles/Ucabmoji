@@ -18,6 +18,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
   TabController controller;
 
   String nick,fotoUrl;
+  int day,mes,year;
 
     getnickName() async{
     await FirebaseAuth.instance.currentUser().then((user) {
@@ -34,9 +35,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       var data = snap.value;
       allData.clear();
       for (var key in keys) {
-        print(data[key]['lugar']);
-        print(data[key]['latitud']);
-
+        if(day==data[key]['dia'] && mes==data[key]['mes'] && year==data[key]['año'] ) {
         myData d = new myData(
           data[key]['titulo'],
           data[key]['comentario'],
@@ -51,11 +50,11 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
           //data[key]['longitud'],
         );
         allData.add(d);
-      }
+      }}
       allData.sort((a,b) => b.num.compareTo(a.num));
 
       for (var key in keys) {
-        if(nick==data[key]['nickName']) {
+        if(nick==data[key]['nickName'] && mes==data[key]['mes'] && year==data[key]['año']) {
           myData e = new myData(
             data[key]['titulo'],
             data[key]['comentario'],
@@ -74,8 +73,8 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       allData2.sort((a,b) => b.num.compareTo(a.num));
 
       setState(() {
-        print('Length : ${allData.length}');
-        print('Length : ${allData2.length}');
+        print('Length All: ${allData.length}');
+        print('Length You: ${allData2.length}');
       });
     });
 
@@ -83,7 +82,9 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
   @override
   void initState() {
-
+    day=DateTime.now().day;
+    mes=DateTime.now().month;
+    year=DateTime.now().year;
     getnickName();
     crearMyData();
     controller = new TabController(length: 2, vsync: this);
@@ -195,7 +196,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(color: Theme.of(context).accentColor,
+              Container(color: Colors.grey, //Theme.of(context).accentColor,
                 child:
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0,0, 5.0, 0),
@@ -220,13 +221,17 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                       new SizedBox(
                         width: 10.0,
                       ),
+                    Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:0),
+                    child:
                       new Text(
                         titulo,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),
-                      ),
+                      ),),
                       //],
                       //),
+
                       new IconButton(
                         icon: Icon(Icons.more_vert,color: Colors.white),
                         onPressed: null,
@@ -237,7 +242,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
               Divider(),
 
-              Image.network(fotoUrl, width: 200,height: 200,),
+              Image.network(fotoUrl, width: 250,height: 270,),
 
               Divider(),
 

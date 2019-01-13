@@ -68,8 +68,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
-        body:
-        ListView(
+        body:new SingleChildScrollView(
+        child:
+        Column(
           children: <Widget>[
         Form(
         key: formKey,
@@ -199,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
         ),),
             SizedBox(height: 200,)
 
-          ]));
+          ])));
   }
 
   void showToast (String alerta, bool color) {

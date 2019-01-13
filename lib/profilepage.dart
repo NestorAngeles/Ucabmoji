@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
+    //super.initState();
     FirebaseAuth.instance.currentUser().then((user) {
       setState(() {
         profilePicUrl = user.photoUrl;
@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       isLoading = true;
     });
-    var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery,maxWidth: 500,maxHeight: 500);
+    var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery,maxWidth: 300,maxHeight: 300);
 
     setState(() {
       selectedImage = tempImage;
@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final StorageReference firebaseStorageRef = FirebaseStorage.instance
         .ref()
         .child('profilepics/${foto}');
-    StorageUploadTask task = firebaseStorageRef.putFile(selectedImage);
+    StorageUploadTask task = await firebaseStorageRef.putFile(selectedImage);
 
     task.future.then((value) {
       setState(() {

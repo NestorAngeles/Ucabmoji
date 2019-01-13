@@ -49,6 +49,9 @@ class _SignupPageState extends State<SignupPage> {
 
   String comprobarNick(String nick){
 
+    if(nick.isEmpty)
+      return "Nick vacio";
+
     if(nicks.contains(nick.toLowerCase())){
       return " Ya esta existe ese NickName";
     }
@@ -72,6 +75,8 @@ class _SignupPageState extends State<SignupPage> {
         return false;
       }
     }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,11 +141,12 @@ class _SignupPageState extends State<SignupPage> {
                                 color: Theme.of(context).primaryColor),
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Theme.of(context).primaryColor))),
+                        validator: (value) => validarClave(value),
                         onSaved: (val) {
                           _password = val;
                         },
                         obscureText: true,
-                        validator: (value) => validarClave(value),
+
                       ),
                       SizedBox(height: 50.0),
                       Container(
@@ -151,7 +157,7 @@ class _SignupPageState extends State<SignupPage> {
                             elevation: 7.0,
                             child: InkWell(
                               onTap: () {
-
+                                    if(validateAndSave()){
                                   showToast("Registrando Usuario", true);
                                 FirebaseAuth.instance
                                     .createUserWithEmailAndPassword(
@@ -186,7 +192,7 @@ class _SignupPageState extends State<SignupPage> {
                                   print(e);
                                   showToast(e.toString(),false);
 
-                                });
+                                });}
                               },
                               child: Center(
                                 child: Text(
@@ -234,13 +240,21 @@ class _SignupPageState extends State<SignupPage> {
 
 
   String emailUcab(String email){
-    if(!_email.endsWith("@est.ucab.edu.ve") || !_email.endsWith("@ucab.edu.ve"))
+
+
+    if(email.isEmpty)
+      return "Correo vacio";
+
+    if(!email.endsWith("@est.ucab.edu.ve") && !email.endsWith("@ucab.edu.ve"))
       return "Correo invalido (ejemplo@est.ucab.edu.ve)";
   }
 
   String validarClave(String correo){
-    if(_password.length<6){
-      showToast("La contraseña deben ser mínimo 6 caracteres", false);
+
+    if(correo.isEmpty)
+      return "Correo vacio";
+
+    if(correo.length<6){
       return "Mínimo 6 caracteres";
     }
 

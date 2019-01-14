@@ -9,6 +9,7 @@ import 'package:flutter_ucabmoji/auth.dart';
 import 'package:flutter_ucabmoji/homepage.dart';
 import 'package:flutter_ucabmoji/rootpage.dart';
 import 'package:flutter_ucabmoji/widgets/post.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:random_string/random_string.dart' as random;
 
 class PublicarPost extends StatefulWidget {
@@ -17,9 +18,8 @@ class PublicarPost extends StatefulWidget {
 
   final VoidCallback onSignedOut;
   String titulo, comentario, nickName,profilePicUrl,foto,emoji,lugar;
-  double lat,long;
+  String lat,long;
   File image;
-
 
   @override
   _PublicarPostState createState() => new _PublicarPostState();
@@ -36,13 +36,13 @@ class _PublicarPostState extends State<PublicarPost> {
   bool emojizar=false;
 
   List<int> num = [];
-  int num2;
+  int num2,  conte=0;
 
 
   void initState(){
     print("initSATETE");
 
-    Timer(Duration(seconds: 15), () {
+    Timer(Duration(seconds: 5), () {
       setState(() {
         elcolor = Colors.green;
         boton = "EMOJIZAR";
@@ -89,23 +89,49 @@ class _PublicarPostState extends State<PublicarPost> {
   }
 
   getUrl() async{
+
+    if(widget.foto == null){
+      showToast("ERROR", false);
+      Navigator.of(context).pop();
+    }
+
     final StorageReference storageRef = FirebaseStorage.instance.ref().child('PostFotos').child(widget.foto);
     print("ke pasa");
 
-    url = await storageRef.getDownloadURL();
+    url = await storageRef.getDownloadURL().catchError((e){
+      setState(() {
+
+        conte=conte+1;
+        print(conte);
+
+        if(conte>3) {
+          boton = "ERROR";
+          emojizar = false;
+          showToast("ERROR", false);
+          Navigator.of(context).pop();
+        }
+      });
+    });
+
     print("COÑO");
     print("Aqui esta el $url");
+
+    if(url != null) {
+      setState(() {
+        boton = "EMOJIZAR";
+        elcolor = Colors.green;
+      });
+    }
 
   }
 
   _sendToServer() async {
 
-
     await FirebaseAuth.instance.currentUser().then((user) {
         widget.profilePicUrl = user.photoUrl;
         widget.nickName = user.displayName;
-    }).catchError((e) {
-      print(e);
+    }).catchError((e){
+      showToast(e,false);
     });
 
       print(widget.nickName);
@@ -131,6 +157,8 @@ class _PublicarPostState extends State<PublicarPost> {
       "minutos" : DateTime.now().minute,
 
       "fotoUrl" : 'hey',
+    }).catchError((e){
+      showToast(e,false);
     });
 
       DatabaseReference ref = FirebaseDatabase.instance.reference();
@@ -160,7 +188,7 @@ class _PublicarPostState extends State<PublicarPost> {
       ref.child('Post').push().set(data).then((Value){
         print("posted");
       }).catchError((e){
-        print(e);
+        showToast(e,false);
       });
 
     }
@@ -293,18 +321,22 @@ class _PublicarPostState extends State<PublicarPost> {
           ),])),
 
 
-            SizedBox(height: 25,),
+            SizedBox(height: 10,),
             InkWell(
             onTap: () {
               if(emojizar) {
                 //publicarFoto();
                 //tiempo();
-
+                if(url == null) {
+                  boton = "ESPERE...";
+                  elcolor = Colors.grey;
+                  initState();
+                }else{
                 _sendToServer();
                 Navigator.push(context,
                     new MaterialPageRoute(
                         builder: (context) => new RootPage(auth: new Auth())));
-              }
+              }}
             },
             child:
             Container(
@@ -320,6 +352,25 @@ class _PublicarPostState extends State<PublicarPost> {
                         fontSize: 24.0,
                         color: Colors.white))))),
         ]))
+    );
+  }
+
+  void showToast (String alerta, bool color) {
+    String error;
+
+    Color colors;
+    if(!color)
+      colors = Colors.red;
+    else
+      colors = Colors.green;
+
+    Fluttertoast.showToast(
+      backgroundColor: colors,
+      msg: alerta,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 3,
+      textColor: Colors.white,
     );
   }
 }

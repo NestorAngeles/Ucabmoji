@@ -20,6 +20,7 @@ class _MyLocationState extends State<MyLocation> {
   String lugar;
   double lat,long;
   bool enLaUCAB;
+  String lat2,long2;
 
   String mapa ="design/mapa.png",actual="design/mapa.png";
 

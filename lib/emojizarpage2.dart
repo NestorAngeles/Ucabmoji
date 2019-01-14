@@ -9,7 +9,7 @@ class Camara extends StatefulWidget {
 
   Camara({this.onSignedOut,this.lat,this.long,this.lugar});
   final VoidCallback onSignedOut;
-  double lat,long;
+  String lat,long;
   String lugar;
 
   @override

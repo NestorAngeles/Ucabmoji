@@ -12,7 +12,7 @@ class CrearPublicacion extends StatefulWidget {
 
   CrearPublicacion({this.onSignedOut,this.image,this.lat,this.long,this.lugar});
   final VoidCallback onSignedOut;
-  double lat,long;
+  String lat,long;
   String lugar;
   File image;
 
@@ -36,6 +36,7 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
   Color siguiente;
   String boton="";
 
+  String smile="design/smile.png",good="design/good.png",sad="design/sad.png",angry="design/angry.png";
 
   publicarFoto(){
     foto = random.randomAlphaNumeric(5)+nickName+".png";
@@ -106,10 +107,10 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
   FlatButton(
   child: Text(boton,style: TextStyle(color: Colors.green,fontSize: 20)),
   onPressed: (){
-  print(widget.long);
-  print(widget.lat);
+  //print(widget.long);
+  //print(widget.lat);
   if(nextPage()){
-    print("there");
+    //print("there");
   sendNick();
   publicarFoto();
   Navigator.push(context,
@@ -156,7 +157,7 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
   children: <Widget>[
   Center(
   child:
-  new Image.file(widget.image,scale: 1.5),),
+  new Image.file(widget.image,scale: 3),),
   new Divider(indent: 1,height: 10,),
   Center(
   child:
@@ -188,19 +189,21 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
   maxLength: 25,
   ),
   ),
-  new SizedBox(width: 20.0),
-  new DropdownButtonHideUnderline(
-  child: new DropdownButton(
-  items: items,
-  hint: new Text("Emoji"),
-  value: emoji,
-  onChanged: (String val) {
-  boton="Siguiente";
-  setState(() {
-  emoji = val;
-  });
-  },
-  ))
+  //new SizedBox(width: 20.0),
+
+  //new DropdownButtonHideUnderline(
+  //child: new DropdownButton(
+  //items: items,
+  //hint: new Text("Emoji"),
+  //value: emoji,
+  //onChanged: (String val) {
+  //boton="Siguiente";
+  //setState(() {
+  //emoji = val;
+  //});
+  //},
+  //))
+
   ],
   ),
   new TextFormField(
@@ -210,9 +213,80 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
   },
   validator: validateMessage,
   maxLines: 4,
-  maxLength: 200,
+  maxLength: 130,
   maxLengthEnforced: true,
   ),
+    SizedBox(height: 20,),
+    Row(
+      //mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+      children: <Widget>[
+        InkWell(
+          child:
+            Image.asset(smile,scale: 2,),
+          onTap: (){
+            FocusScope.of(context).requestFocus(new FocusNode());
+            setState(() {
+              smile="design/smile2.png";
+              good="design/good.png";
+              sad="design/sad.png";
+              angry="design/angry.png";
+              //smile="design/smile2.png";
+              emoji="smile";
+              boton="Siguiente";
+            });
+
+          },
+        ),
+        InkWell(
+          child:
+          Image.asset(good,scale: 2,),
+          onTap: (){
+            FocusScope.of(context).requestFocus(new FocusNode());
+            setState(() {
+              smile="design/smile.png";
+              good="design/good2.png";
+              sad="design/sad.png";
+              angry="design/angry.png";
+              emoji="good";
+              boton="Siguiente";
+            });
+
+          },
+        ),
+        InkWell(
+          child:
+          Image.asset(sad,scale: 2,),
+          onTap: (){
+            FocusScope.of(context).requestFocus(new FocusNode());
+            setState(() {
+              smile="design/smile.png";
+              good="design/good.png";
+              sad="design/sad2.png";
+              angry="design/angry.png";
+              emoji="sad";
+              boton="Siguiente";
+            });
+          },
+        ),
+        InkWell(
+          child:
+          Image.asset(angry,scale: 2,),
+          onTap: (){
+            FocusScope.of(context).requestFocus(new FocusNode());
+            setState(() {
+              smile="design/smile.png";
+              good="design/good.png";
+              sad="design/sad.png";
+              angry="design/angry2.png";
+              emoji="angry";
+              boton="Siguiente";
+            });
+          },
+        )
+      ],
+    ),
 
   ],
   );

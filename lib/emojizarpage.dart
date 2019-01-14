@@ -27,7 +27,7 @@ class _EmojizarState extends State<Emojizar> {
   String error,lugar,error2;
   bool enLaUCAB;
   double lat,long;
-
+  String lat2,long2;
 
   getLugar(){
 
@@ -182,7 +182,8 @@ class _EmojizarState extends State<Emojizar> {
       currentLocation = my_location;
       lat=currentLocation['latitude'];
       long=currentLocation['longitude'];
-
+      lat2=lat.toStringAsFixed(6);
+      long2=long.toStringAsFixed(6);
     });
   }
 
@@ -212,8 +213,8 @@ class _EmojizarState extends State<Emojizar> {
                               Navigator.push(context,
                                   new MaterialPageRoute(builder: (context) =>
                                   new Camara(onSignedOut: widget.onSignedOut,
-                                      lat: lat,
-                                      long: long,
+                                      lat: lat2,
+                                      long: long2,
                                       lugar: lugar)));
                             //}else{
                               //showToast(error2, false);

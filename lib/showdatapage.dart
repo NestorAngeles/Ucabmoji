@@ -6,6 +6,7 @@ import 'package:flutter_ucabmoji/myData.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_ucabmoji/widgets/appbar.dart';
 import 'package:flutter_ucabmoji/widgets/post.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ShowDataPage extends StatefulWidget {
   @override
@@ -93,7 +94,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Colors.white, //Theme.of(context).primaryColor,
 
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -115,23 +116,39 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
         ),
 
           actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.person),
+                onPressed: (){}),
+
       IconButton(
       icon: Icon(Icons.settings),
         onPressed: () {
           Navigator.push(context,
               new MaterialPageRoute(builder: (context) => new Ajustes()));
         }
-      ),]),
+      ),
+          ],
+      leading: IconButton(icon: Text("Hey"), onPressed: null),),
 
       body: new TabBarView(
         controller: controller,
           children:<Widget>[
+
+
             new Container(
                 child: (allData.length == 0 || allData.length == null || allData == null)
-                    ? new Container(
-                      child: new Center(
-                        child: new Image.asset("design/sad.png"),)
-                      )
+                    ? new Center(
+                  child:
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Todavía no hay publicaciones hoy",style: TextStyle(fontSize: 25,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold,),
+                      textAlign: TextAlign.center,),
+                      SizedBox(height: 20,),
+                      Image.asset("design/sad.png")
+                    ],
+                  ),
+                )
                     : new ListView.builder(
                   itemCount: allData.length,
                   itemBuilder: (_, index) {
@@ -150,11 +167,20 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                     );
                   },
                 )),
+
+
             new Container(
-                child: (allData.length == 0 || allData.length == null || allData == null)
-                    ? new Container(
-                    child: new Center(
-                      child: new Image.asset("design/sad.png"),)
+                child: (allData2.length == 0 || allData2.length == null || allData2 == null)
+                    ? new Center(
+                  child:
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("No has publicado este mes",style: TextStyle(fontSize: 25,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold,),),
+                      SizedBox(height: 20,),
+                      Image.asset("design/sad.png")
+                    ],
+                  ),
                 )
                     : new ListView.builder(
                   itemCount: allData2.length,
@@ -196,7 +222,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(color: Colors.grey, //Theme.of(context).accentColor,
+              Container(color: Theme.of(context).accentColor,
                 child:
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0,0, 5.0, 0),
@@ -241,9 +267,11 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                 ),),
 
               Divider(),
-
+              InkWell(
+                onDoubleTap: (){showToast("Like", true);},
+                child:
               Image.network(fotoUrl, width: 250,height: 270,),
-
+              ),
               Divider(),
 
               Container(//color:Theme.of(context).accentColor,
@@ -303,4 +331,25 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
               ),]));
   }
 
+
+
+  void showToast (String alerta, bool color) {
+    String error;
+
+    Color colors;
+    if(!color)
+      colors = Colors.red;
+    else
+      colors = Colors.green;
+
+    Fluttertoast.showToast(
+      backgroundColor: colors,
+      msg: alerta,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 1,
+      textColor: Colors.white,
+    );
+
+  }
 }

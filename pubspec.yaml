@@ -67,6 +67,12 @@ flutter:
     - design/yes_icon.png
     - design/modulo_Aulas.jpg
 
+    - design/angry2.png
+    - design/good2.png
+    - design/sad2.png
+    - design/smile2.png
+
+    - design/msj.png
     - design/location.png
     - design/anfiteatro.png
     - design/cajaNegra.png

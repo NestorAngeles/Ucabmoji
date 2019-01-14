@@ -11,14 +11,31 @@ class Ajustes extends StatelessWidget {
         appBar: new AppBar(
             title: new Text("Ajustes"),
             backgroundColor: Color(dkPurple)),
-        body: new Center(
-            child: new RaisedButton(
-                child: new Text("Volver"),
-                onPressed: () {
-                  Navigator.pop(context);
-                }
-            )
+        body: ListView(
+          children: <Widget>[
+            InkWell(
+              child: Card(
+                child:
+                    Container(
+                      height:60,
+                      child:Center(
+                        child:
+                Text("Acerca de",style: TextStyle(fontSize: 20),),
+              ),))
+            ),
+            InkWell(
+                child: Card(
+                    child:
+                    Container(
+                      height:60,
+                      child:Center(
+                        child:
+                        Text("Tutorial",style: TextStyle(fontSize: 20),),
+                      ),))
+            ),
+          ],
         )
-    );
+        );
+
   }
 }

@@ -20,6 +20,8 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
   String nick,fotoUrl;
   int day,mes,year;
+  IconData icon=Icons.person;
+  bool people=true;
 
     getnickName() async{
     await FirebaseAuth.instance.currentUser().then((user) {
@@ -81,6 +83,8 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
   }
 
+
+
   @override
   void initState() {
     day=DateTime.now().day;
@@ -90,6 +94,82 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
     crearMyData();
     controller = new TabController(length: 2, vsync: this);
     }
+
+
+    Widget home(){
+      if(people) {
+        return Container(
+            child: (allData.length == 0 || allData.length == null ||
+                allData == null)
+                ? new Center(
+              child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Todavía no hay publicaciones hoy",
+                    style: TextStyle(fontSize: 25, color: Theme
+                        .of(context)
+                        .primaryColor, fontWeight: FontWeight.bold,),
+                    textAlign: TextAlign.center,),
+                  SizedBox(height: 20,),
+                  Image.asset("design/sad.png")
+                ],
+              ),
+            )
+                : new ListView.builder(
+              itemCount: allData.length,
+              itemBuilder: (_, index) {
+                return UI(
+                  allData[index].titulo,
+                  allData[index].comentario,
+                  allData[index].nickName,
+                  allData[index].emoji,
+                  allData[index].fotoUrl,
+                  allData[index].dia,
+                  allData[index].mes,
+                  allData[index].year,
+                  allData[index].lugar,
+                  allData[index].num,
+                  //allData[index].long
+                );
+              },
+            ));
+      }else{
+        return Container(
+            child: (allData2.length == 0 || allData2.length == null || allData2 == null)
+                ? new Center(
+              child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("No has publicado este mes",style: TextStyle(fontSize: 25,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold,),),
+                  SizedBox(height: 20,),
+                  Image.asset("design/sad.png")
+                ],
+              ),
+            )
+                : new ListView.builder(
+              itemCount: allData2.length,
+              itemBuilder: (_, index) {
+                return UI(
+                  allData2[index].titulo,
+                  allData2[index].comentario,
+                  allData2[index].nickName,
+                  allData2[index].emoji,
+                  allData2[index].fotoUrl,
+                  allData2[index].dia,
+                  allData2[index].mes,
+                  allData2[index].year,
+                  allData2[index].lugar,
+                  allData2[index].num,
+                  //allData2[index].long
+                );
+              },
+            )
+        );
+      }
+    }
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,24 +181,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
           centerTitle: true,
         title: Text("Ucabmoji",style: TextStyle(fontSize: 25),),
         elevation: 5,
-        bottom: new TabBar(
-          unselectedLabelColor: Colors.grey,
-          tabs:
-            <Widget>[
-              new Tab(
-                icon: new Icon(Icons.people),
-              ),
-              new Tab(
-                icon: new Icon(Icons.person),
-              ),
-            ],
-        controller: controller,
-        ),
-
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.person),
-                onPressed: (){}),
 
       IconButton(
       icon: Icon(Icons.settings),
@@ -128,79 +191,21 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
         }
       ),
           ],
-      leading: IconButton(icon: Text("Hey"), onPressed: null),),
-
-      body: new TabBarView(
-        controller: controller,
-          children:<Widget>[
-
-
-            new Container(
-                child: (allData.length == 0 || allData.length == null || allData == null)
-                    ? new Center(
-                  child:
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Todavía no hay publicaciones hoy",style: TextStyle(fontSize: 25,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold,),
-                      textAlign: TextAlign.center,),
-                      SizedBox(height: 20,),
-                      Image.asset("design/sad.png")
-                    ],
-                  ),
-                )
-                    : new ListView.builder(
-                  itemCount: allData.length,
-                  itemBuilder: (_, index) {
-                    return UI(
-                      allData[index].titulo,
-                      allData[index].comentario,
-                      allData[index].nickName,
-                      allData[index].emoji,
-                      allData[index].fotoUrl,
-                      allData[index].dia,
-                      allData[index].mes,
-                      allData[index].year,
-                      allData[index].lugar,
-                      allData[index].num,
-                      //allData[index].long
-                    );
-                  },
-                )),
+      leading: IconButton(icon: Icon(icon,color: Colors.white,), onPressed:() {
+        setState(() {
+          if(people) {
+            icon = Icons.people;
+            people = false;
+          }else{
+            icon = Icons.person;
+            people = true;
+          }
+        });
+      }),),
 
 
-            new Container(
-                child: (allData2.length == 0 || allData2.length == null || allData2 == null)
-                    ? new Center(
-                  child:
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("No has publicado este mes",style: TextStyle(fontSize: 25,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold,),),
-                      SizedBox(height: 20,),
-                      Image.asset("design/sad.png")
-                    ],
-                  ),
-                )
-                    : new ListView.builder(
-                  itemCount: allData2.length,
-                  itemBuilder: (_, index) {
-                    return UI(
-                      allData2[index].titulo,
-                      allData2[index].comentario,
-                      allData2[index].nickName,
-                      allData2[index].emoji,
-                      allData2[index].fotoUrl,
-                        allData2[index].dia,
-                        allData2[index].mes,
-                        allData2[index].year,
-                        allData2[index].lugar,
-                        allData2[index].num,
-                        //allData2[index].long
-                    );
-                  },
-                )),
-          ]),
+
+      body: home()
     );
   }
 

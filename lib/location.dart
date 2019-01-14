@@ -170,7 +170,8 @@ class _MyLocationState extends State<MyLocation> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(title: Text("Ubicacion"),
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: Text("Ubicacion",style:TextStyle(fontSize: 25)),
           automaticallyImplyLeading: false,
           centerTitle: true,
           actions: <Widget>[

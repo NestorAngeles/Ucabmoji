@@ -135,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: AppBar(title: Text("Perfil"),backgroundColor: Theme.of(context).primaryColor,
+        appBar: AppBar(title: Text("Perfil",style:TextStyle(fontSize: 25)),backgroundColor: Theme.of(context).primaryColor,
             automaticallyImplyLeading: false,
             centerTitle: true,
             actions: <Widget>[

@@ -1,6 +1,8 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_ucabmoji/auth.dart';
 import 'package:flutter_ucabmoji/rootpage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ucabmoji/splash.dart';
 
 //pages
 import 'homepage.dart';
@@ -8,7 +10,12 @@ import 'loginpage.dart';
 import 'signuppage.dart';
 import 'selectprofpic.dart';
 
-void main() => runApp(new MyApp());
+void main() {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(new MyApp());
+  });
+}
 
 class MyApp extends StatelessWidget {
   int dkPurple = 0xFF2C1656;
@@ -18,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RootPage(auth: new Auth()),
+      home: SplashScreen(),
       theme: ThemeData(
           primaryColor: Color(dkPurple),
           accentColor: Color(lgPurple),

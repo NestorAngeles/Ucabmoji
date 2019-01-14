@@ -11,13 +11,14 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   List<msj> allmsj = [];
-  int day,mes,year;
+  int day,mes,year,hora;
 
 
   void initState() {
     day=DateTime.now().day;
     mes=DateTime.now().month;
     year=DateTime.now().year;
+    hora=DateTime.now().hour;
 
     DatabaseReference ref = FirebaseDatabase.instance.reference();
     ref.child('Mensaje').once().then((DataSnapshot snap) {
@@ -33,6 +34,7 @@ class _ChatPageState extends State<ChatPage> {
             data[key]['mes'],
             data[key]['año'],
             data[key]['hora'],
+          data[key]['minutos'],
         );
         allmsj.add(d);
       }}
@@ -45,11 +47,23 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
+  String calhora(int ho){
+    int aux;
+
+    if( hora-ho<= 1){
+      return "Reciente";
+    }else{
+      aux=hora-ho;
+      return "Hace $aux horas";
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text("Mensajes"),
+      appBar: AppBar(title: Text("Mensajes",style:TextStyle(fontSize: 25)),
           automaticallyImplyLeading: false,
           centerTitle: true,
           actions: <Widget>[
@@ -85,13 +99,15 @@ class _ChatPageState extends State<ChatPage> {
                 allmsj[index].dia,
                 allmsj[index].mes,
                 allmsj[index].year,
+                allmsj[index].hora,
+                allmsj[index].min,
               );
             },
           )),);
   }
 
 
-  Widget UI(String titulo, String mensaje, int dia, int mes, int year) {
+  Widget UI(String titulo, String mensaje, int dia, int mes, int year,int hora,int min) {
     return new Card(
       margin: EdgeInsets.all(5),
       elevation: 10.0,
@@ -126,7 +142,17 @@ class _ChatPageState extends State<ChatPage> {
                 mensaje,
                 style: TextStyle(),
                 textAlign: TextAlign.justify,
-              ),),)
+              ),),),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 5),
+              child:
+            Row(children: <Widget>[
+              Icon(Icons.timer,size: 14,),
+             Text(
+                calhora(hora),
+                style: TextStyle(fontWeight: FontWeight.w400,fontSize: 12),
+                textAlign: TextAlign.justify,
+              ),]))
           ],
         ),
       )],

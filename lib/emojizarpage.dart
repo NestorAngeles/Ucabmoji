@@ -204,7 +204,7 @@ class _EmojizarState extends State<Emojizar> {
                       new InkWell(
                           onTap: () {
                             getLugar();
-                            //if(enLaUCAB) {
+                            if(enLaUCAB) {
                               comprobarCorreo();
                               print(lat);
                               print(long);
@@ -216,10 +216,10 @@ class _EmojizarState extends State<Emojizar> {
                                       lat: lat2,
                                       long: long2,
                                       lugar: lugar)));
-                            //}else{
-                              //showToast(error2, false);
-                              //error="";
-                            //}
+                            }else{
+                              showToast(error2, false);
+                              error="";
+                            }
                           },
                           child: new Container(
                               width: 200.0,

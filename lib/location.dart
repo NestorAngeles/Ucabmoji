@@ -182,10 +182,15 @@ class _MyLocationState extends State<MyLocation> {
                       new MaterialPageRoute(builder: (context) => new Ajustes()));
                 }
             ),]),
-        body: Center(
+        body: RefreshIndicator(child:
+            ListView(
+
+                children: <Widget>[
+        Center(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                SizedBox(height: 70,),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -196,22 +201,23 @@ class _MyLocationState extends State<MyLocation> {
                           child: Image.asset("design/location.png",scale: 25,)
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0,5,5,5),
-                        child: Text("$lugar",style: TextStyle(
-                            fontSize: 25,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).accentColor))),
+                          padding: const EdgeInsets.fromLTRB(0,5,5,5),
+                          child: Text("$lugar",style: TextStyle(
+                              fontSize: 25,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).accentColor))),
                     ]),
-                Text('Lat/Long:${lat}/${long}',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.deepPurpleAccent,
-                  ),),
+                SizedBox(height: 10,),
+                //Text('Lat/Long:${lat}/${long}',
+                  //style: TextStyle(
+                    //fontSize: 20.0,
+                    //color: Colors.deepPurpleAccent,
+                  // ),),
                 Image.asset(actual),
               ]
           ),
-        )
+        )]), onRefresh: Refresh)
 
 
     );
@@ -235,4 +241,19 @@ class _MyLocationState extends State<MyLocation> {
     });
   }
 
+
+  Future<Null> Refresh() {
+    Completer<Null> completer = new Completer<Null>();
+
+    new Future.delayed(new Duration(seconds: 3)).then((_){
+      completer.complete();
+      setState(() {
+        print("refresh");
+        initState();
+      });
+    });
+
+    return completer.future;
+
+  }
 }

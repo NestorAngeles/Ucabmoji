@@ -212,11 +212,15 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
   comentario = val;
   },
   validator: validateMessage,
-  maxLines: 4,
-  maxLength: 130,
+  maxLines: 3,
+  maxLength: 120,
   maxLengthEnforced: true,
   ),
-    SizedBox(height: 20,),
+    SizedBox(height: 5,),
+    Center(
+    child:
+    Text("¿Como te sientes?",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Theme.of(context).primaryColor),),),
+    SizedBox(height: 10,),
     Row(
       //mainAxisAlignment: MainAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +19,8 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
   List<myData> allData = [];
   List<myData> allData2 = [];
   TabController controller;
-
-  String nick,fotoUrl;
-  int day,mes,year;
+  String nick,fotoUrl,appbar="Ucabmoji Home";
+  int day,mes,year,hora;
   IconData icon=Icons.person;
   bool people=true;
 
@@ -30,8 +31,21 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       print(e);
     });}
 
-  crearMyData() async{
+  String calhora(int ho){
+    int aux;
 
+    if( hora-ho<= 1){
+      return "Reciente";
+    }else{
+      aux=hora-ho;
+      return "Hace $aux horas";
+    }
+
+  }
+
+  crearMyData() async{
+    allData.clear();
+    allData2.clear();
     DatabaseReference ref = FirebaseDatabase.instance.reference();
     ref.child('Post').once().then((DataSnapshot snap) {
       var keys = snap.value.keys;
@@ -50,7 +64,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
           data[key]['año'],
           data[key]['lugar'],
           data[key]['num'],
-          //data[key]['longitud'],
+          data[key]['hora'],
         );
         allData.add(d);
       }}
@@ -69,7 +83,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             data[key]['año'],
             data[key]['lugar'],
             data[key]['num'],
-            //data[key]['longitud'],
+            data[key]['hora'],
           );
           allData2.add(e);
         }}
@@ -90,6 +104,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
     day=DateTime.now().day;
     mes=DateTime.now().month;
     year=DateTime.now().year;
+    hora=DateTime.now().hour;
     getnickName();
     crearMyData();
     controller = new TabController(length: 2, vsync: this);
@@ -98,14 +113,17 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
 
     Widget home(){
       if(people) {
-        return Container(
+        return RefreshIndicator(child:
+        Container(
             child: (allData.length == 0 || allData.length == null ||
                 allData == null)
-                ? new Center(
-              child:
+                ? new ListView(
+
+              children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(height: 110,),
                   Text("Todavía no hay publicaciones hoy",
                     style: TextStyle(fontSize: 25, color: Theme
                         .of(context)
@@ -114,59 +132,62 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                   SizedBox(height: 20,),
                   Image.asset("design/sad.png")
                 ],
-              ),
+              ),]
             )
                 : new ListView.builder(
               itemCount: allData.length,
               itemBuilder: (_, index) {
                 return UI(
-                  allData[index].titulo,
-                  allData[index].comentario,
-                  allData[index].nickName,
-                  allData[index].emoji,
-                  allData[index].fotoUrl,
-                  allData[index].dia,
-                  allData[index].mes,
-                  allData[index].year,
-                  allData[index].lugar,
-                  allData[index].num,
-                  //allData[index].long
+                    allData[index].titulo,
+                    allData[index].comentario,
+                    allData[index].nickName,
+                    allData[index].emoji,
+                    allData[index].fotoUrl,
+                    allData[index].dia,
+                    allData[index].mes,
+                    allData[index].year,
+                    allData[index].lugar,
+                    allData[index].num,
+                    allData[index].hora
                 );
               },
-            ));
+            )), onRefresh: Refresh);
       }else{
-        return Container(
+        return RefreshIndicator(child:
+        Container(
             child: (allData2.length == 0 || allData2.length == null || allData2 == null)
-                ? new Center(
-              child:
+                ? new ListView(
+
+              children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(height: 120,),
                   Text("No has publicado este mes",style: TextStyle(fontSize: 25,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold,),),
                   SizedBox(height: 20,),
                   Image.asset("design/sad.png")
                 ],
-              ),
+              ),]
             )
                 : new ListView.builder(
               itemCount: allData2.length,
               itemBuilder: (_, index) {
                 return UI(
-                  allData2[index].titulo,
-                  allData2[index].comentario,
-                  allData2[index].nickName,
-                  allData2[index].emoji,
-                  allData2[index].fotoUrl,
-                  allData2[index].dia,
-                  allData2[index].mes,
-                  allData2[index].year,
-                  allData2[index].lugar,
-                  allData2[index].num,
-                  //allData2[index].long
+                    allData2[index].titulo,
+                    allData2[index].comentario,
+                    allData2[index].nickName,
+                    allData2[index].emoji,
+                    allData2[index].fotoUrl,
+                    allData2[index].dia,
+                    allData2[index].mes,
+                    allData2[index].year,
+                    allData2[index].lugar,
+                    allData2[index].num,
+                    allData2[index].hora
                 );
               },
             )
-        );
+        ), onRefresh: Refresh);
       }
     }
 
@@ -179,7 +200,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       appBar: AppBar(
         automaticallyImplyLeading: false,
           centerTitle: true,
-        title: Text("Ucabmoji",style: TextStyle(fontSize: 25),),
+        title: Text(appbar,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
         elevation: 5,
           actions: <Widget>[
 
@@ -196,9 +217,11 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
           if(people) {
             icon = Icons.people;
             people = false;
+            appbar="Mis publicaciones";
           }else{
             icon = Icons.person;
             people = true;
+            appbar="Ucabmoji Home";
           }
         });
       }),),
@@ -214,7 +237,7 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       int dia, int mes, int year,
       //double lat, double long,
       String lugar,
-      int num,
+      int num, int ho
       ){
 
     return new Card(
@@ -228,50 +251,21 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(color: Theme.of(context).accentColor,
+                height: 50,
                 child:
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0,0, 5.0, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-
-                      //Row(
-                      //children: <Widget>[
-                      //new Container(
-                      //height: 40.0,
-                      //width: 40.0,
-                      //decoration: new BoxDecoration(
-                      //shape: BoxShape.circle,
-                      //image: new DecorationImage(
-                      //fit: BoxFit.fill,
-                      //image: new NetworkImage(
-                      //"https://firebasestorage.googleapis.com/v0/b/proyecto-ucabmoji.appspot.com/o/icon2.png?alt=media&token=1e8892f2-9da7-46f6-836a-936a51d234ca")),
-                      //),
-                      //),
-
-                      new SizedBox(
-                        width: 10.0,
-                      ),
-                    Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:0),
+                  child: Center(
+                    //padding: const EdgeInsets.symmetric(horizontal:0),
                     child:
                       new Text(
                         titulo,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),
+                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white,fontFamily: 'Montserrat'),
                       ),),
-                      //],
-                      //),
-
-                      new IconButton(
-                        icon: Icon(Icons.more_vert,color: Colors.white),
-                        onPressed: null,
-                      )
-                    ],
-                  ),
                 ),),
 
-              Divider(),
+              SizedBox(height: 5,),
               InkWell(
                 onDoubleTap: (){showToast("Like", true);},
                 child:
@@ -324,9 +318,8 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
                           ),
                           Padding(
                               padding: const EdgeInsets.fromLTRB(0,10,15,0),
-                              child:
-                              Text(dia.toString()+"/"+mes.toString()+"/"+year.toString(),
-                                  style: TextStyle(color: Colors.grey))),
+                              child: tiempo(dia, mes, year, ho)
+                              ),
                         ],
                       ),
                     ),
@@ -336,6 +329,16 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
               ),]));
   }
 
+
+  Widget tiempo(int dia, int mes, int year, int ho){
+      if(people){
+        return Text(calhora(ho),
+            style: TextStyle(color: Colors.grey));
+      }else{
+        return Text("${dia.toString()}/${mes.toString()}/${year.toString()}",
+            style: TextStyle(color: Colors.grey));
+      }
+  }
 
 
   void showToast (String alerta, bool color) {
@@ -355,6 +358,21 @@ class _ShowDataPageState extends State<ShowDataPage> with SingleTickerProviderSt
       timeInSecForIos: 1,
       textColor: Colors.white,
     );
+
+  }
+
+  Future<Null> Refresh() async{
+    Completer<Null> completer = new Completer<Null>();
+
+    new Future.delayed(new Duration(seconds: 3)).then((_){
+      completer.complete();
+      setState(() {
+        print("refresh");
+        crearMyData();
+      });
+    });
+
+    return completer.future;
 
   }
 }

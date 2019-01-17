@@ -19,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(Duration(seconds: 3), () => Navigator.push(context,
         new MaterialPageRoute(builder: (context) => new RootPage(auth: new Auth()))));
+
   }
 
   //PANTALLA SPLASH-------------------------------------------------------------

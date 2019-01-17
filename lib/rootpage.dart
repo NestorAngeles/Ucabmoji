@@ -27,6 +27,7 @@ class _RootPageState extends State<RootPage> {
   @override
   initState() {
     super.initState();
+
     widget.auth.currentUser().then((userId){
       setState(() {
         authStatus = userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
@@ -50,6 +51,7 @@ class _RootPageState extends State<RootPage> {
   //PAGINA DE CONTROL PARA CUANDO NO SE A INICIADO LA SESION MOSTRAR EL LOGIN
   @override
   Widget build(BuildContext context) {
+    
     switch(authStatus){
       case AuthStatus.notSignedIn:
         return new LoginPage(

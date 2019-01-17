@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: new RootPage(auth: new Auth()),
       theme: ThemeData(
           primaryColor: Color(dkPurple),
           accentColor: Color(lgPurple),

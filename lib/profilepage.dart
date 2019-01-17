@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
     //super.initState();
     FirebaseAuth.instance.currentUser().then((user) {
       setState(() {
-        profilePicUrl = user.photoUrl;
+        //profilePicUrl = user.photoUrl;
         nickName = user.displayName;
       });
     }).catchError((e) {
@@ -135,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: AppBar(title: Text("Perfil",style:TextStyle(fontSize: 25)),backgroundColor: Theme.of(context).primaryColor,
+        appBar: AppBar(title: Text("Perfil",style:TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),backgroundColor: Theme.of(context).primaryColor,
             automaticallyImplyLeading: false,
             centerTitle: true,
             actions: <Widget>[
@@ -150,9 +150,9 @@ class _ProfilePageState extends State<ProfilePage> {
         body: new Stack(
       children: <Widget>[
         Positioned(
-            width: 350.0,
+            width: 310.0,
             left: 4.0,
-            top: MediaQuery.of(context).size.height / 9,
+            top: MediaQuery.of(context).size.height / 12,
             child: Column(
               children: <Widget>[
                 Container(
@@ -160,9 +160,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 150.0,
                     decoration: BoxDecoration(
                         color: Theme.of(context).primaryColor,
-                        image: DecorationImage(
-                            image: NetworkImage(profilePicUrl),
-                            fit: BoxFit.cover),
+                        //image: DecorationImage(
+                            //image: NetworkImage(profilePicUrl),
+                          //  fit: BoxFit.cover),
                         borderRadius: BorderRadius.all(Radius.circular(75.0)),
                         boxShadow: [
                           BoxShadow(blurRadius: 7.0, color: Colors.black)

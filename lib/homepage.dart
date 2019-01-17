@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-
+      resizeToAvoidBottomPadding: false,
       bottomNavigationBar: new Material(
         //color: Colors.white,
         color: Theme.of(context).primaryColor,

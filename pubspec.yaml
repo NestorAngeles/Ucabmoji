@@ -89,6 +89,16 @@ flutter:
     - design/patos.png
     - design/mapa.png
 
+    - design/acerca_de.png
+    - design/tutorial1.png
+    - design/tutorial2.png
+    - design/tutorial3.png
+    - design/tutorial4.png
+    - design/tutorial5.png
+    - design/tutorial6.png
+    - design/tutorial7.png
+    - design/tutorial8.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 
@@ -100,6 +110,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Madeleina
+      fonts:
+        - asset: design/Madeleina Sans.otf
   # fonts:
   #   - family: Schyler
   #     fonts:

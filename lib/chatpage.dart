@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ucabmoji/ajustes.dart';
@@ -12,14 +14,14 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   List<msj> allmsj = [];
   int day,mes,year,hora;
-
+  String titulo="Mensajes";
 
   void initState() {
     day=DateTime.now().day;
     mes=DateTime.now().month;
     year=DateTime.now().year;
     hora=DateTime.now().hour;
-
+    print("initStatemsj");
     DatabaseReference ref = FirebaseDatabase.instance.reference();
     ref.child('Mensaje').once().then((DataSnapshot snap) {
       var keys = snap.value.keys;
@@ -39,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
         allmsj.add(d);
       }}
 
-      allmsj.sort((a,b) => a.hora.compareTo(b.hora));
+      allmsj.sort((a,b) => b.hora.compareTo(a.hora));
 
       setState(() {
         print('Length : ${allmsj.length}');
@@ -56,14 +58,50 @@ class _ChatPageState extends State<ChatPage> {
       aux=hora-ho;
       return "Hace $aux horas";
     }
+  }
 
+  Widget body(){
+    return RefreshIndicator(child:
+    Container(
+        child: allmsj.length == 0
+            ? new ListView(
+
+          children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 120,),
+              Text("No hay mensajes",style: TextStyle(fontSize: 25,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold,),),
+              SizedBox(height: 20,),
+              Image.asset("design/good.png")
+            ],
+          ),]
+        )
+            : new ListView.builder(
+          itemCount: allmsj.length,
+          itemBuilder: (_, index) {
+            return UI(
+              allmsj[index].titulo,
+              allmsj[index].mensaje,
+              allmsj[index].dia,
+              allmsj[index].mes,
+              allmsj[index].year,
+              allmsj[index].hora,
+              allmsj[index].min,
+            );
+          },
+        )),
+        onRefresh: Refresh,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text("Mensajes",style:TextStyle(fontSize: 25)),
+      resizeToAvoidBottomPadding: false,
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: Text(titulo,style:TextStyle(fontSize: 25)),
           automaticallyImplyLeading: false,
           centerTitle: true,
           actions: <Widget>[
@@ -76,34 +114,7 @@ class _ChatPageState extends State<ChatPage> {
             ),]),
 
 
-      body: new Container(
-          child: allmsj.length == 0
-              ? new Center(
-
-                    child:
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("No hay mensajes",style: TextStyle(fontSize: 25,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold,),),
-                        SizedBox(height: 20,),
-                        Image.asset("design/good.png")
-                      ],
-                  ),
-          )
-              : new ListView.builder(
-            itemCount: allmsj.length,
-            itemBuilder: (_, index) {
-              return UI(
-                allmsj[index].titulo,
-                allmsj[index].mensaje,
-                allmsj[index].dia,
-                allmsj[index].mes,
-                allmsj[index].year,
-                allmsj[index].hora,
-                allmsj[index].min,
-              );
-            },
-          )),);
+      body: body());
   }
 
 
@@ -132,6 +143,7 @@ class _ChatPageState extends State<ChatPage> {
               child: Text(
                 titulo,
                 style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                //textAlign: TextAlign.center,
               ),),
             Container(
               padding: EdgeInsets.all(2),
@@ -141,7 +153,7 @@ class _ChatPageState extends State<ChatPage> {
               child: Text(
                 mensaje,
                 style: TextStyle(),
-                textAlign: TextAlign.justify,
+                //textAlign: TextAlign.center,
               ),),),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 5),
@@ -180,4 +192,22 @@ class _ChatPageState extends State<ChatPage> {
         textColor: Colors.white,
     );
   }
+
+  Future<Null> Refresh() async {
+
+    Completer<Null> completer = new Completer<Null>();
+
+    new Future.delayed(new Duration(seconds: 3)).then((_){
+      completer.complete();
+      setState(() {
+        print("refresh");
+        //titulo="titulo2";
+        initState();
+      });
+    });
+
+    return completer.future;
+  }
+
+
 }
